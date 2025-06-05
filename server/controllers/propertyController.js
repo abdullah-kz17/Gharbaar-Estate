@@ -101,8 +101,8 @@ exports.createProperty = async (req, res) => {
 
         const saved = await newProperty.save();
         const populated = await Property.findById(saved._id)
-            .populate('realtorId', 'name email phone role')
-            .populate('createdBy', 'name email role');
+            .populate('realtorId', 'username email phone role')
+            .populate('createdBy', 'username email role');
 
         res.status(201).json({
             success: true,
@@ -146,8 +146,8 @@ exports.getPropertyById = async (req, res) => {
         }
 
         const property = await Property.findById(id)
-            .populate('realtorId', 'name email phone role')
-            .populate('createdBy', 'name email role');
+            .populate('realtorId', 'username email phone role')
+            .populate('createdBy', 'username email role');
 
         if (!property) {
             return res.status(404).json({ success: false, message: 'Property not found.' });
@@ -214,8 +214,8 @@ exports.updateProperty = async (req, res) => {
             new: true,
             runValidators: true,
         })
-            .populate('realtorId', 'name email phone role')
-            .populate('createdBy', 'name email role');
+            .populate('realtorId', 'username email phone role')
+            .populate('createdBy', 'username email role');
 
         res.status(200).json({
             success: true,
@@ -466,8 +466,8 @@ exports.searchPropertiesByPrompt = async (req, res) => {
 
         // --- Step 5: Search in DB ---
         const properties = await Property.find(query)
-            .populate('realtorId', 'name email phone role')
-            .populate('createdBy', 'name email role');
+            .populate('realtorId', 'username email phone role')
+            .populate('createdBy', 'username email role');
 
         res.status(200).json({
             success: true,
