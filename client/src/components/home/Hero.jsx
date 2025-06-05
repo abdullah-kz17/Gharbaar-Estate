@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FaChevronDown, FaSearch, FaMapMarkerAlt, FaHome, FaBuilding, FaWarehouse, FaBed, FaBath, FaCar, FaPlay } from 'react-icons/fa';
+import {useAuth} from "../../context/AuthContext.jsx";
 
-export default function Hero({ isLoggedIn, user }) {
+export default function Hero() {
+    const { isLoggedIn, user } = useAuth();
+
     const [scrollY, setScrollY] = useState(0);
     const [searchQuery, setSearchQuery] = useState('');
     const [propertyType, setPropertyType] = useState('');
@@ -96,7 +99,7 @@ export default function Hero({ isLoggedIn, user }) {
                             transition={{ duration: 0.8 }}
                             className="text-white"
                         >
-                            {user?.name && (
+                            {user?.username && (
                                 <motion.div
                                     initial={{ opacity: 0, y: -20 }}
                                     animate={{ opacity: 1, y: 0 }}
@@ -104,7 +107,7 @@ export default function Hero({ isLoggedIn, user }) {
                                     className="mb-4"
                                 >
                                     <span className="inline-block px-4 py-2 bg-gradient-to-r from-indigo-600/90 to-purple-600/90 rounded-full text-sm font-medium backdrop-blur-sm">
-                                        Welcome back, {user.name}! 👋
+                                        Welcome back, {user.username}! 👋
                                     </span>
                                 </motion.div>
                             )}

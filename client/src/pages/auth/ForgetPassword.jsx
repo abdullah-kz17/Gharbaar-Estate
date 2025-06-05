@@ -103,7 +103,7 @@ export default function ForgetPassword() {
 
           <p className="mt-6 text-center text-sm text-gray-600">
             Remember your password?{' '}
-            <Link href="/login" className="text-indigo-600 hover:underline font-medium">
+            <Link to="/login" className="text-indigo-600 hover:underline font-medium">
               Go back to login
             </Link>
           </p>
