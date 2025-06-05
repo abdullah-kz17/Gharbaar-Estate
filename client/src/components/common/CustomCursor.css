@@ -1,0 +1,23 @@
+.circle {
+    height: 24px;
+    width: 24px;
+    border-radius: 50%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 999999;
+    mix-blend-mode: difference;
+    background-image: linear-gradient(to right, #4f46e5, #9333ea);
+    background-size: 200%;
+    animation: gradientShift 2s linear infinite;
+}
+
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    100% {
+        background-position: 100% 50%;
+    }
+}

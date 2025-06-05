@@ -1,0 +1,9 @@
+# Ignore node_modules
+node_modules/
+
+# Ignore the .env file to avoid pushing sensitive information
+.env
+
+# Optional: Ignore other files that are not needed in the repository
+.DS_Store
+*.log
