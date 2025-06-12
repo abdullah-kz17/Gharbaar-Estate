@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import PropertyCard from "../../components/listings/PropertyCard.jsx";
 import { getAllProperties, searchProperties } from "../../store/thunks/PropertyThunk.js";
 import Loader from "../../components/common/Loader.jsx";
+import { getUserFavorites } from "../../store/thunks/FavouriteThunk.js";
 
 const examplePrompts = [
     "3 bedroom house in Lahore under 1 crore",
@@ -16,10 +17,12 @@ const examplePrompts = [
 const PropertyList = () => {
     const dispatch = useDispatch();
     const { properties, searchResults, loading, error } = useSelector((state) => state.property);
+    const { favorites, loading: favoritesLoading } = useSelector((state) => state.favorite);
 
     const [prompt, setPrompt] = useState("");
     const [debouncedPrompt, setDebouncedPrompt] = useState("");
     const [placeholder, setPlaceholder] = useState(examplePrompts[0]);
+    const [initialLoad, setInitialLoad] = useState(true);
     const placeholderIndex = useRef(0);
 
     // Rotate example prompts every 4s
@@ -31,14 +34,29 @@ const PropertyList = () => {
         return () => clearInterval(interval);
     }, []);
 
-    // Initial fetch
+    // Initial fetch - load favorites first, then properties
     useEffect(() => {
-        dispatch(getAllProperties());
+        const loadInitialData = async () => {
+            try {
+                // Load favorites first
+                await dispatch(getUserFavorites()).unwrap();
+                // Then load properties
+                await dispatch(getAllProperties()).unwrap();
+            } catch (error) {
+                console.error("Error loading initial data:", error);
+            } finally {
+                setInitialLoad(false);
+            }
+        };
+
+        loadInitialData();
     }, [dispatch]);
 
     // Show error toast
     useEffect(() => {
-        if (error) toast.error(error);
+        if (error) {
+            toast.error(error);
+        }
     }, [error]);
 
     // Debounce input
@@ -51,17 +69,53 @@ const PropertyList = () => {
 
     // Search or fetch all
     useEffect(() => {
-        if (debouncedPrompt) {
-            dispatch(searchProperties({ prompt: debouncedPrompt }));
-        } else {
-            dispatch(getAllProperties());
+        if (!initialLoad) { // Only search after initial load is complete
+            if (debouncedPrompt) {
+                dispatch(searchProperties({ prompt: debouncedPrompt }));
+            } else {
+                dispatch(getAllProperties());
+            }
         }
-    }, [debouncedPrompt, dispatch]);
+    }, [debouncedPrompt, dispatch, initialLoad]);
 
     const displayedProperties = useMemo(
-        () => (debouncedPrompt ? searchResults : properties),
+        () => (debouncedPrompt ? searchResults : properties) || [],
         [debouncedPrompt, searchResults, properties]
     );
+
+    // Helper function to check if property is favorited
+    const isPropertyFavorited = (propertyId) => {
+        if (!favorites || !Array.isArray(favorites) || !propertyId) return false;
+        return favorites.some(fav =>
+            fav?.propertyId?._id === propertyId || fav?._id === propertyId
+        );
+    };
+
+    // Handle favorite toggle from property card
+    const handleFavoriteToggle = async (propertyId) => {
+        // Refresh favorites after toggle to ensure consistency
+        try {
+            await dispatch(getUserFavorites()).unwrap();
+        } catch (error) {
+            console.error("Error refreshing favorites:", error);
+        }
+    };
+
+    // Show loading during initial load
+    if (initialLoad || (loading && !displayedProperties.length)) {
+        return (
+            <section className="min-h-screen bg-white dark:bg-gray-950 py-12 px-4 sm:px-6 lg:px-8 transition-all duration-300">
+                <div className="max-w-7xl mx-auto">
+                    <h1 className="text-4xl sm:text-5xl font-extrabold text-center text-indigo-800 dark:text-indigo-300 mb-6 drop-shadow-md">
+                        Find Your Dream Property
+                    </h1>
+                    <div className="flex justify-center py-20">
+                        <Loader />
+                    </div>
+                </div>
+            </section>
+        );
+    }
 
     return (
         <section className="min-h-screen bg-white dark:bg-gray-950 py-12 px-4 sm:px-6 lg:px-8 transition-all duration-300">
@@ -72,7 +126,7 @@ const PropertyList = () => {
                 </h1>
 
                 <p className="text-center text-indigo-600 dark:text-indigo-200 text-lg max-w-2xl mx-auto mb-10">
-                    No complicated filters — just type what you want in plain language and we’ll find the best matches for you!
+                    No complicated filters — just type what you want in plain language and we'll find the best matches for you!
                 </p>
 
                 {/* Search Input */}
@@ -95,20 +149,34 @@ const PropertyList = () => {
                     </span>
                 </div>
 
-                {/* Feedback */}
-                {loading ? (
-                    <p className="text-center text-indigo-600 dark:text-indigo-300 text-xl font-semibold animate-pulse mb-10">
-                        <Loader />
-                    </p>
-                ) : displayedProperties?.length === 0 ? (
+                {/* Loading state during search */}
+                {loading && !initialLoad && (
+                    <div className="text-center mb-10">
+                        <p className="text-indigo-600 dark:text-indigo-300 text-xl font-semibold animate-pulse">
+                            {debouncedPrompt ? "Searching properties..." : "Loading properties..."}
+                        </p>
+                    </div>
+                )}
+
+                {/* Results */}
+                {!loading && displayedProperties.length === 0 ? (
                     <p className="text-center text-gray-500 dark:text-gray-400 text-lg mb-10 italic">
-                        No properties found. Try different keywords!
+                        {debouncedPrompt ? "No properties found matching your search. Try different keywords!" : "No properties available."}
                     </p>
                 ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {displayedProperties.map((property) => (
-                            <PropertyCard key={property._id} property={property} />
-                        ))}
+                        {displayedProperties.map((property) => {
+                            if (!property?._id) return null;
+
+                            return (
+                                <PropertyCard
+                                    key={property._id}
+                                    property={property}
+                                    isFavorited={isPropertyFavorited(property._id)}
+                                    onToggleFavorite={handleFavoriteToggle}
+                                />
+                            );
+                        })}
                     </div>
                 )}
 

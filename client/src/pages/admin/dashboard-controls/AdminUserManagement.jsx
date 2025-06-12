@@ -86,7 +86,7 @@ const AdminUserManagement = () => {
 
     return (
         <div className="p-6 bg-white rounded-lg shadow-md">
-            <h1 className="text-3xl font-bold mb-6 text-indigo-800">Admin User Management</h1>
+            <h1 className="text-3xl font-bold mb-6 text-indigo-800">User Management</h1>
 
             {loading ? (
                 <div className="text-center py-10">

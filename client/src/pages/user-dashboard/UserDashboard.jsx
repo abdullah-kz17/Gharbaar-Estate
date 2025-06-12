@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useDispatch, useSelector, shallowEqual } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
     FaCheckCircle,
     FaHourglassHalf,
@@ -7,19 +7,17 @@ import {
     FaStar,
 } from 'react-icons/fa';
 
-import { fetchFavoriteServices } from "../../store/thunks/FavouriteServiceThunk.js";
-import { getUserFavorites } from "../../store/thunks/FavouriteThunk.js";
-import { getUserProperties } from "../../store/thunks/PropertyThunk.js";
+import { fetchFavoriteServices } from "../../store/thunks/FavouriteServiceThunk";
+import { getUserFavorites } from "../../store/thunks/FavouriteThunk";
+import { getUserProperties } from "../../store/thunks/PropertyThunk";
 
 const StatCard = ({ title, value, Icon, color }) => (
-    <div className="rounded-xl overflow-hidden shadow-md border border-gray-200 bg-white dark:bg-gray-900 dark:border-gray-700 transition-colors duration-300">
-        <div
-            className={`p-4 flex items-center justify-between bg-gradient-to-r ${color} text-white`}
-        >
-            <div className="text-lg font-semibold truncate">{title}</div>
-            <Icon className="w-8 h-8 opacity-90" aria-hidden="true" />
+    <div className="rounded-xl shadow-md border bg-white dark:bg-gray-900 dark:border-gray-700 transition">
+        <div className={`p-4 flex justify-between items-center text-white bg-gradient-to-r ${color}`}>
+            <h3 className="text-lg font-semibold truncate">{title}</h3>
+            <Icon className="w-8 h-8 opacity-90" />
         </div>
-        <div className="p-5 text-4xl font-extrabold text-center text-gray-900 dark:text-gray-100 transition-colors duration-300">
+        <div className="p-5 text-4xl font-extrabold text-center text-gray-900 dark:text-gray-100">
             {value}
         </div>
     </div>
@@ -29,25 +27,41 @@ const UserDashboard = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(getUserProperties());
         dispatch(getUserFavorites());
+        dispatch(getUserProperties());
         dispatch(fetchFavoriteServices());
     }, [dispatch]);
 
-    // Using shallowEqual for better performance to avoid unnecessary re-renders
-    const { userProperties } = useSelector((state) => state.property, shallowEqual);
-    const { favorites: favouriteProperties } = useSelector((state) => state.favorite, shallowEqual);
-    const { favorites: favouriteServices } = useSelector((state) => state.favoriteServices, shallowEqual);
 
-    const pending = userProperties?.filter((p) => !p.isApproved).length || 0;
-    const approved = userProperties?.filter((p) => p.isApproved).length || 0;
-    const favouritesCount = favouriteProperties?.length || 0;
-    const favouriteServicesCount = favouriteServices?.length || 0;
+    const { userProperties } = useSelector((state) => state.property);
+    const { favorites: favoritePropertiesRaw } = useSelector((state) => state.favorite);
+    const { favorites: favoriteServicesRaw } = useSelector((state) => state.favoriteServices);
+
+    // Deduplicated + valid favorites
+    const favoriteProperties = Array.isArray(favoritePropertiesRaw)
+        ? favoritePropertiesRaw.filter((fav, index, self) => {
+            const id = fav?.propertyId?._id;
+            return id && self.findIndex(f => f?.propertyId?._id === id) === index;
+        })
+        : [];
+
+    // Clean + count favorite services
+    const favoriteServices = Array.isArray(favoriteServicesRaw)
+        ? favoriteServicesRaw.filter((fav, index, self) => {
+            const id = fav?.serviceProviderId?._id || fav?.serviceProviderId || fav?._id;
+            return id && self.findIndex(f =>
+                (f?.serviceProviderId?._id || f?.serviceProviderId || f?._id) === id
+            ) === index;
+        })
+        : [];
+
+    const pending = userProperties?.filter(p => !p.isApproved).length || 0;
+    const approved = userProperties?.filter(p => p.isApproved).length || 0;
 
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6 transition-colors duration-500">
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
             <div className="max-w-7xl mx-auto">
-                <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-10 text-center sm:text-left">
+                <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-10">
                     Welcome to Your Dashboard
                 </h1>
 
@@ -66,13 +80,13 @@ const UserDashboard = () => {
                     />
                     <StatCard
                         title="Favourite Properties"
-                        value={favouritesCount}
+                        value={favoriteProperties.length}
                         Icon={FaHeart}
-                        color="from-pink-400 to-rose-500"
+                        color="from-pink-500 to-rose-500"
                     />
                     <StatCard
                         title="Favourite Services"
-                        value={favouriteServicesCount}
+                        value={favoriteServices.length}
                         Icon={FaStar}
                         color="from-indigo-500 to-purple-600"
                     />

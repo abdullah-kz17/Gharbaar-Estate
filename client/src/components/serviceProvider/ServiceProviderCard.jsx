@@ -1,16 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { FaMapMarkerAlt, FaStar, FaHeart, FaRegHeart } from "react-icons/fa";
-import { useDispatch, useSelector } from "react-redux";
-import {
-    addFavoriteService,
-    removeFavoriteService,
-} from "../../store/thunks/FavouriteServiceThunk.js";
 
-const ServiceProviderCard = ({ provider }) => {
+const ServiceProviderCard = ({ provider, isFavorited = false, onToggleFavorite }) => {
     const [isToggling, setIsToggling] = React.useState(false);
-    const dispatch = useDispatch();
-    const { favorites } = useSelector((state) => state.favoriteServices);
 
     const {
         _id,
@@ -23,21 +16,10 @@ const ServiceProviderCard = ({ provider }) => {
         isFeatured = false,
     } = provider;
 
-    const isFavorited = favorites.some(fav => {
-        const id = typeof fav.serviceProviderId === 'string'
-            ? fav.serviceProviderId
-            : fav.serviceProviderId._id;
-        return id === _id;
-    });
-
-
     const handleFavoriteToggle = async () => {
+        if (!onToggleFavorite) return;
         setIsToggling(true);
-        if (isFavorited) {
-            await dispatch(removeFavoriteService(_id));
-        } else {
-            await dispatch(addFavoriteService(_id));
-        }
+        await onToggleFavorite();
         setIsToggling(false);
     };
 
@@ -57,7 +39,7 @@ const ServiceProviderCard = ({ provider }) => {
     };
 
     return (
-        <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden relative">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden relative">
             {/* 🌟 Featured Badge */}
             {isFeatured && (
                 <div className="absolute top-3 left-3 bg-gradient-to-r from-purple-600 to-indigo-500 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md z-10">
@@ -65,18 +47,20 @@ const ServiceProviderCard = ({ provider }) => {
                 </div>
             )}
 
-            {/* ❤️ Like / Dislike Button */}
+            {/* ❤️ Favorite Button */}
             <button
                 onClick={handleFavoriteToggle}
                 className="absolute top-3 right-3 text-red-500 text-lg z-10"
-                data-tip={isFavorited ? "Remove from favorites" : "Add to favorites"}
-            >{isToggling ? (
-                <span className="animate-spin">⏳</span>
-            ) : isFavorited ? (
-                <FaHeart />
-            ) : (
-                <FaRegHeart />
-            )}
+                title={isFavorited ? "Remove from favorites" : "Add to favorites"}
+                disabled={isToggling}
+            >
+                {isToggling ? (
+                    <span className="animate-spin">⏳</span>
+                ) : isFavorited ? (
+                    <FaHeart />
+                ) : (
+                    <FaRegHeart />
+                )}
             </button>
 
             <Link to={`/providers/${_id}`}>
@@ -89,20 +73,19 @@ const ServiceProviderCard = ({ provider }) => {
 
             <div className="p-4">
                 <Link to={`/providers/${_id}`} className="hover:underline">
-                    <h3 className="text-xl font-bold text-gray-800">{businessName}</h3>
+                    <h3 className="text-xl font-bold text-gray-800 dark:text-white">{businessName}</h3>
                 </Link>
 
-                {/* ⭐ Rating display */}
                 <div className="flex items-center mt-1">
                     {renderStars(averageRating)}
-                    <span className="ml-2 text-sm text-gray-600">
-            {averageRating.toFixed(1)} / 5
-          </span>
+                    <span className="ml-2 text-sm text-gray-600 dark:text-gray-300">
+                        {averageRating.toFixed(1)} / 5
+                    </span>
                 </div>
 
-                <p className="text-gray-600 mt-1 line-clamp-2">{description}</p>
+                <p className="text-gray-600 dark:text-gray-400 mt-1 line-clamp-2">{description}</p>
 
-                <div className="flex items-center text-sm text-gray-500 mt-2">
+                <div className="flex items-center text-sm text-gray-500 dark:text-gray-400 mt-2">
                     <FaMapMarkerAlt className="mr-1 text-blue-500" />
                     <span>{address}</span>
                 </div>
@@ -111,17 +94,17 @@ const ServiceProviderCard = ({ provider }) => {
                     {servicesOffered.map((service) => (
                         <span
                             key={service}
-                            className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-medium"
+                            className="bg-blue-100 dark:bg-blue-800 text-blue-700 dark:text-blue-200 px-3 py-1 rounded-full text-xs font-medium"
                         >
-              {service}
-            </span>
+                            {service}
+                        </span>
                     ))}
                 </div>
 
                 <div className="mt-4 text-right">
                     <Link
                         to={`/providers/${_id}`}
-                        className="text-blue-600 hover:text-blue-800 font-medium text-sm"
+                        className="text-blue-600 dark:text-blue-400 hover:text-blue-800 font-medium text-sm"
                     >
                         View Details →
                     </Link>
