@@ -22,7 +22,7 @@ router.post('/analyze-image', upload.single('image'), async (req, res) => {
             headers: form.getHeaders(),
         });
 
-        fs.unlinkSync(filePath); // Clean up
+        fs.unlinkSync(filePath); 
         res.status(200).json(response.data);
     } catch (error) {
         console.error('AI Prediction Error:', error.message);

@@ -15,7 +15,7 @@ import {
     submitReview,
     deleteReview,
     getReviewsForProvider,
-} from "../thunks/serviceProviderThunk";
+} from "../thunks/ServiceProviderThunk.js";
 
 const initialState = {
     myProfile: null,
