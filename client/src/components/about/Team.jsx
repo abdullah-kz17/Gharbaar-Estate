@@ -43,11 +43,11 @@ const TeamSection = ({ isVisible, teamMembers }) => {
                             className="bg-white dark:bg-indigo-950 rounded-2xl overflow-hidden shadow-lg dark:shadow-indigo-800 border border-gray-100 dark:border-indigo-800 transition-all duration-300"
                         >
                             {/* Image */}
-                            <div className="relative">
+                            <div className="relative w-full h-64 overflow-hidden rounded-t-2xl bg-gradient-to-br from-indigo-100 to-indigo-200 dark:from-indigo-800 dark:to-indigo-900">
                                 <img
                                     src={member.image}
                                     alt={member.name}
-                                    className="w-full h-64 object-cover"
+                                    className="w-full h-full object-cover object-top transition-transform duration-300 hover:scale-105"
                                 />
                                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-indigo-700/90 to-transparent px-6 py-4">
                                     <h3 className="text-xl font-semibold text-white">{member.name}</h3>

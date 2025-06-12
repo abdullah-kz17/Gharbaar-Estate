@@ -8,7 +8,24 @@ import {
 } from "../../store/thunks/ServiceProviderThunk.js";
 import { toast } from "react-toastify";
 import { MdDelete, MdUpdate } from "react-icons/md";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import Select from "react-select";
+
+const servicesList = [
+    "Plumbing",
+    "Painting",
+    "Electrical",
+    "Renovation",
+    "Interior Design",
+    "Cleaning",
+    "Architecture",
+    "Other",
+];
+
+const serviceOptions = servicesList.map((service) => ({
+    label: service,
+    value: service,
+}));
 
 const ServiceProviderProfileForm = () => {
     const dispatch = useDispatch();
@@ -25,6 +42,8 @@ const ServiceProviderProfileForm = () => {
         location: "",
         image: null,
     });
+
+    const [previewImage, setPreviewImage] = useState(null);
 
     useEffect(() => {
         dispatch(getMyServiceProvider());
@@ -56,15 +75,21 @@ const ServiceProviderProfileForm = () => {
         }));
     };
 
-    const handleMultiSelect = (e) => {
-        const selected = Array.from(e.target.selectedOptions).map((opt) => opt.value);
-        setFormData((prev) => ({ ...prev, servicesOffered: selected }));
-    };
-
     const handleFileChange = (e) => {
+        const file = e.target.files[0];
         setFormData((prev) => ({
             ...prev,
-            image: e.target.files[0],
+            image: file,
+        }));
+        if (file) {
+            setPreviewImage(URL.createObjectURL(file));
+        }
+    };
+
+    const handleServiceSelect = (selectedOptions) => {
+        setFormData((prev) => ({
+            ...prev,
+            servicesOffered: selectedOptions.map((option) => option.value),
         }));
     };
 
@@ -74,114 +99,136 @@ const ServiceProviderProfileForm = () => {
         data.append("businessName", formData.businessName);
         data.append("description", formData.description);
         data.append("address", formData.address);
-        data.append("servicesOffered", JSON.stringify(formData.servicesOffered));
+        data.append(
+            "servicesOffered",
+            JSON.stringify(formData.servicesOffered)
+        );
         data.append("location", formData.location);
 
         if (formData.image) data.append("image", formData.image);
 
-        dispatch(updateServiceProvider(data));
-        if(success){
-            navigate('/service-provider/me')
-        }
+        dispatch(updateServiceProvider(data)).then(() => {
+            navigate("/service-provider/me");
+        });
     };
 
     const handleDelete = () => {
-        if (window.confirm("Are you sure you want to delete your service profile?")) {
+        if (
+            window.confirm("Are you sure you want to delete your service profile?")
+        ) {
             dispatch(deleteServiceProvider());
         }
     };
 
-    if (!myProfile) return <div className="text-center mt-10">Loading profile...</div>;
+    if (!myProfile)
+        return <div className="text-center text-gray-500 mt-10">Loading profile...</div>;
 
     return (
         <form
             onSubmit={handleUpdate}
-            className="max-w-3xl mx-auto bg-white p-6 rounded shadow mt-6"
+            className="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-lg my-10 space-y-6"
             encType="multipart/form-data"
         >
-            <h2 className="text-2xl font-semibold mb-6 text-center">My Service Profile</h2>
+            <h2 className="text-3xl font-bold text-center text-gray-700 mb-4">
+                Manage Your Service Profile
+            </h2>
 
-            <div className="mb-4">
-                <label className="block font-semibold">Business Name</label>
-                <input
-                    type="text"
-                    name="businessName"
-                    value={formData.businessName}
-                    onChange={handleChange}
-                    className="w-full border px-3 py-2 rounded"
-                />
+            <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                    <label className="block font-semibold text-gray-700 mb-1">Business Name</label>
+                    <input
+                        type="text"
+                        name="businessName"
+                        value={formData.businessName}
+                        onChange={handleChange}
+                        placeholder="e.g. John’s Plumbing Services"
+                        className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                </div>
+
+                <div>
+                    <label className="block font-semibold text-gray-700 mb-1">Address</label>
+                    <input
+                        type="text"
+                        name="address"
+                        value={formData.address}
+                        onChange={handleChange}
+                        placeholder="Business location"
+                        className="w-full border border-gray-300 px-4 py-2 rounded-lg"
+                    />
+                </div>
             </div>
 
-            <div className="mb-4">
-                <label className="block font-semibold">Description</label>
+            <div>
+                <label className="block font-semibold text-gray-700 mb-1">Description</label>
                 <textarea
                     name="description"
                     value={formData.description}
                     onChange={handleChange}
-                    className="w-full border px-3 py-2 rounded"
+                    placeholder="Brief about your services"
+                    className="w-full border border-gray-300 px-4 py-2 rounded-lg h-28"
                 />
             </div>
 
-            <div className="mb-4">
-                <label className="block font-semibold">Address</label>
-                <input
-                    type="text"
-                    name="address"
-                    value={formData.address}
-                    onChange={handleChange}
-                    className="w-full border px-3 py-2 rounded"
-                />
-            </div>
-
-            <div className="mb-4">
-                <label className="block font-semibold">Services Offered</label>
-                <select
-                    multiple
+            <div>
+                <label className="block font-semibold text-gray-700 mb-1">Services Offered</label>
+                <Select
+                    isMulti
                     name="servicesOffered"
-                    value={formData.servicesOffered}
-                    onChange={handleMultiSelect}
-                    className="w-full border px-3 py-2 rounded"
-                >
-                    {["Plumbing", "Painting", "Electrical", "Renovation", "Interior Design", "Cleaning", "Architecture", "Other"].map(
-                        (service) => (
-                            <option key={service} value={service}>
-                                {service}
-                            </option>
-                        )
-                    )}
-                </select>
+                    value={formData.servicesOffered.map((service) => ({
+                        label: service,
+                        value: service,
+                    }))}
+                    onChange={handleServiceSelect}
+                    options={serviceOptions}
+                    placeholder="Select your services..."
+                    className="basic-multi-select"
+                    classNamePrefix="select"
+                />
             </div>
 
-            <div className="mb-4">
-                <label className="block font-semibold">Upload New Image</label>
-                <input type="file" name="image" onChange={handleFileChange} />
+            <div className="flex flex-col md:flex-row items-center gap-4">
+                <div>
+                    <label className="block font-semibold text-gray-700 mb-1">Upload New Image</label>
+                    <input type="file" name="image" onChange={handleFileChange} />
+                </div>
+                {previewImage && (
+                    <div>
+                        <p className="text-sm text-gray-600 mb-1">Preview:</p>
+                        <img src={previewImage} alt="Preview" className="w-32 h-32 object-cover rounded" />
+                    </div>
+                )}
             </div>
 
-            <div className="mb-4">
-                <label className="block font-semibold">Location (optional JSON)</label>
+            <div>
+                <label className="block font-semibold text-gray-700 mb-1">Location (JSON format)</label>
                 <input
                     type="text"
                     name="location"
                     value={formData.location}
                     onChange={handleChange}
-                    className="w-full border px-3 py-2 rounded"
+                    placeholder='e.g. {"lat": 12.9716, "lng": 77.5946}'
+                    className="w-full border border-gray-300 px-4 py-2 rounded-lg"
                 />
             </div>
 
-            <div className="flex items-center justify-between mt-6">
+            <div className="flex flex-col md:flex-row justify-between gap-4 mt-6">
                 <button
                     type="submit"
-                    className="flex items-center gap-2 bg-green-600 text-white px-5 py-2 rounded hover:bg-green-700"
+                    className={`flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-semibold text-white bg-green-600 hover:bg-green-700 transition ${
+                        loading ? "opacity-50 cursor-not-allowed" : ""
+                    }`}
                     disabled={loading}
                 >
-                    <MdUpdate /> {loading ? "Updating..." : "Update Profile"}
+                    <MdUpdate size={20} /> {loading ? "Updating..." : "Update Profile"}
                 </button>
+
                 <button
                     type="button"
                     onClick={handleDelete}
-                    className="flex items-center gap-2 bg-red-600 text-white px-5 py-2 rounded hover:bg-red-700"
+                    className="flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-semibold text-white bg-red-600 hover:bg-red-700 transition"
                 >
-                    <MdDelete /> Delete Profile
+                    <MdDelete size={20} /> Delete Profile
                 </button>
             </div>
         </form>

@@ -13,7 +13,7 @@ import AdminLayout from "./pages/admin/AdminLayout.jsx";
 // Lazy-loaded Pages
 const Home = lazy(() => import("./pages/Home"));
 const About = lazy(() => import("./pages/About.jsx"));
-import ContactPage from "./pages/Contact.jsx";
+const ContactPage = lazy(() => import("./pages/Contact.jsx"));
 const Login = lazy(() => import("./pages/auth/Login.jsx"));
 const Register = lazy(() => import("./pages/auth/Register.jsx"));
 const ForgetPassword = lazy(() => import("./pages/auth/ForgetPassword.jsx"));
@@ -24,37 +24,41 @@ const SendOtp = lazy(() => import("./pages/auth/SendOtp.jsx"));
 const PropertyList = lazy(() => import("./pages/property/PropertyList.jsx"));
 const PropertyDetail = lazy(() => import("./pages/property/PropertyDetail.jsx"));
 const UpdateProperty = lazy(() => import("./pages/property/UpdateProperty.jsx"));
-const NotFound = lazy(() => import("./pages/NotFound"));
+const PropertyForm = lazy(() => import("./pages/property/PropertyForm.jsx"));
+const NotFound = lazy(() => import("./pages/NotFound.jsx"));
+const PricingPlan = lazy(() => import("./pages/PricingPlan.jsx"));
 
+// User Pages
 const Profile = lazy(() => import("./pages/profile/Profile.jsx"));
 const UpdateProfile = lazy(() => import("./pages/profile/UpdateProfile.jsx"));
-const PropertyForm = lazy(() => import("./pages/property/PropertyForm.jsx"));
 
+// Dashboard
 const UserDashboard = lazy(() => import("./pages/user-dashboard/UserDashboard.jsx"));
 const UserPropertyManagement = lazy(() => import("./pages/user-dashboard/dashboard-controls/UserPropertyManagement.jsx"));
 const Favorites = lazy(() => import("./pages/user-dashboard/dashboard-controls/Favourites.jsx"));
 const FavoriteServices = lazy(() => import("./pages/user-dashboard/dashboard-controls/FavouriteServices.jsx"));
 
+// Service Provider
 const BecomeProvider = lazy(() => import("./pages/serviceProvider/BecomeProvider.jsx"));
 const ServiceProviderList = lazy(() => import("./pages/serviceProvider/ServiceProviderList.jsx"));
 const ServiceProviderDetailPage = lazy(() => import("./pages/serviceProvider/ServiceProviderDetails.jsx"));
 const ServiceProviderProfileView = lazy(() => import("./pages/serviceProvider/ServiceProviderProfileView.jsx"));
 const ServiceProviderProfileForm = lazy(() => import("./components/serviceProvider/ServiceProviderProfileForm.jsx"));
 
+// Admin
 const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard.jsx"));
 const AdminPropertyManagement = lazy(() => import("./pages/admin/dashboard-controls/AdminPropertyManagement.jsx"));
 const PendingApprovals = lazy(() => import("./pages/admin/dashboard-controls/PendingApprovals.jsx"));
 const AdminProviderApprovalTable = lazy(() => import("./pages/admin/dashboard-controls/AdminApproveProvider.jsx"));
+const AdminUserManagement = lazy(() => import("./pages/admin/dashboard-controls/AdminUserManagement.jsx"));
 
 import "./App.css";
-import CustomCursor from "./components/common/CustomCursor.jsx";
-import AdminUserManagement from "./pages/admin/dashboard-controls/AdminUserManagement.jsx";
-import PricingPlan from "./pages/PricingPlan.jsx";
+// import CustomCursor from "./components/common/CustomCursor.jsx";
 
 function App() {
   return (
       <Router>
-        {/*<CustomCursor />*/}
+        {/* <CustomCursor /> */}
         <Header />
 
         <Suspense fallback={<Loader />}>
