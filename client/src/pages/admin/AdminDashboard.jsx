@@ -12,8 +12,8 @@ import { Bar, Line } from 'react-chartjs-2';
 import {
     getAllProperties, getPendingProperties
 } from '../../store/thunks/PropertyThunk';
-import { adminGetAllProviders } from '../../store/thunks/serviceProviderThunk';
-import { getAllUsers } from '../../store/thunks/UserThunk';
+import { adminGetAllProviders } from '../../store/thunks/ServiceProviderThunk.js';
+import { getAllUsers } from '../../store/thunks/UserThunk.js';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, BarElement);
 
