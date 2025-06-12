@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { submitReview } from "../../store/thunks/serviceProviderThunk";
+import { submitReview } from "../../store/thunks/ServiceProviderThunk.js";
 import { toast } from "react-toastify";
 
 const ReviewForm = ({ providerId, existingReview = null, onFinish }) => {
