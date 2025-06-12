@@ -1,7 +1,7 @@
 import React from "react";
 import { FaStar, FaTrashAlt, FaEdit } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
-import { deleteReview } from "../../store/thunks/serviceProviderThunk";
+import { deleteReview } from "../../store/thunks/serviceProviderThunk.js";
 import { toast } from "react-toastify";
 import { useAuth } from "../../context/AuthContext.jsx";
 
