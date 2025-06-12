@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
-import { getServiceProviderById, getReviewsForProvider } from "../../store/thunks/serviceProviderThunk";
+import { getServiceProviderById, getReviewsForProvider } from "../../store/thunks/ServiceProviderThunk.js";
 import ServiceProviderDetailCard from "../../components/serviceProvider/ServiceProviderDetailCard.jsx";
 import ReviewForm from "../../components/reviews/ReviewForm.jsx";
 import ReviewList from "../../components/reviews/ReviewList.jsx";
