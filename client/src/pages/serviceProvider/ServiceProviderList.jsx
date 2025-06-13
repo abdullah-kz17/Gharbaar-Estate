@@ -115,8 +115,11 @@ const ServiceProvidersList = () => {
                         >
                             <option value="">Min Rating</option>
                             {[5, 4, 3, 2, 1].map(r => (
-                                <option key={r} value={r}>{r} ⭐ & up</option>
-                            ))}
+                            <option key={r} value={r}>
+                                {r} ⭐{r !== 5 && " & up"}
+                            </option>
+                        ))}
+
                         </select>
                     </div>
                 </div>
