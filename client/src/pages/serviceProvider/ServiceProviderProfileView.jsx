@@ -1,10 +1,11 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getMyServiceProvider, deleteServiceProvider } from "../../store/thunks/ServiceProviderThunk";
+import { getMyServiceProvider, deleteServiceProvider } from "../../store/thunks/ServiceProviderThunk.js";
 import { FaMapMarkerAlt, FaCheckCircle, FaEdit, FaTrashAlt, FaStar } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 import Loader from "../../components/common/Loader.jsx";
+import RequestBell from "../../components/common/RequestBell.jsx";
 
 const ServiceProviderProfileView = () => {
     const dispatch = useDispatch();
@@ -58,8 +59,8 @@ const ServiceProviderProfileView = () => {
                 </div>
 
                 {/* Profile Details */}
-                <div className="flex-1 flex flex-col justify-between">
-                    <div>
+                <div className="flex-1 flex flex-col justify-between w-full">
+                    <div className="flex justify-between items-start">
                         <h2 className="text-3xl font-extrabold text-indigo-700 dark:text-indigo-300 flex items-center gap-3">
                             {businessName}
                             {isApproved && <FaCheckCircle className="text-green-500" title="Approved" />}
@@ -70,39 +71,42 @@ const ServiceProviderProfileView = () => {
                             )}
                         </h2>
 
-                        <p className="mt-4 text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
-                            {description}
-                        </p>
-
-                        <p className="mt-6 flex items-center gap-3 text-gray-600 dark:text-gray-400 font-medium">
-                            <FaMapMarkerAlt className="text-red-500" />
-                            {address}
-                        </p>
-
-                        {servicesOffered?.length > 0 && (
-                            <div className="mt-6">
-                                <h4 className="font-semibold text-indigo-700 dark:text-indigo-300 mb-2">
-                                    Services Offered
-                                </h4>
-                                <ul className="flex flex-wrap gap-3">
-                                    {servicesOffered.map((service) => (
-                                        <li
-                                            key={service}
-                                            className="px-4 py-1 bg-indigo-100 dark:bg-indigo-800 text-indigo-800 dark:text-indigo-100 rounded-full font-medium text-sm shadow-sm"
-                                        >
-                                            {service}
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                        )}
-
-                        {location?.lat && location?.lng && (
-                            <p className="mt-6 text-xs text-gray-400 dark:text-gray-500 font-mono tracking-wide select-text">
-                                Coordinates: {location.lat.toFixed(4)}, {location.lng.toFixed(4)}
-                            </p>
-                        )}
+                        {/* 🔔 Notification Bell */}
+                        <RequestBell />
                     </div>
+
+                    <p className="mt-4 text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
+                        {description}
+                    </p>
+
+                    <p className="mt-6 flex items-center gap-3 text-gray-600 dark:text-gray-400 font-medium">
+                        <FaMapMarkerAlt className="text-red-500" />
+                        {address}
+                    </p>
+
+                    {servicesOffered?.length > 0 && (
+                        <div className="mt-6">
+                            <h4 className="font-semibold text-indigo-700 dark:text-indigo-300 mb-2">
+                                Services Offered
+                            </h4>
+                            <ul className="flex flex-wrap gap-3">
+                                {servicesOffered.map((service) => (
+                                    <li
+                                        key={service}
+                                        className="px-4 py-1 bg-indigo-100 dark:bg-indigo-800 text-indigo-800 dark:text-indigo-100 rounded-full font-medium text-sm shadow-sm"
+                                    >
+                                        {service}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+
+                    {location?.lat && location?.lng && (
+                        <p className="mt-6 text-xs text-gray-400 dark:text-gray-500 font-mono tracking-wide select-text">
+                            Coordinates: {location.lat.toFixed(4)}, {location.lng.toFixed(4)}
+                        </p>
+                    )}
 
                     {/* Action Buttons */}
                     <div className="mt-8 flex flex-wrap gap-4">
@@ -127,4 +131,4 @@ const ServiceProviderProfileView = () => {
     );
 };
 
-export default ServiceProviderProfileView;
+export default ServiceProviderProfileView

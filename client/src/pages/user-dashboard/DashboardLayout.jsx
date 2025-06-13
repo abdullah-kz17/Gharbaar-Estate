@@ -6,6 +6,7 @@ import { useState } from 'react';
 const navItems = [
     { to: '/user-dashboard', label: 'Dashboard', icon: <FiHome />, end: true },
     { to: '/user-dashboard/dashboard-properties', label: 'My Properties', icon: <FiList /> },
+    { to: '/user-dashboard/my/requests', label: 'My Requested Services', icon: <FiList /> },
     { to: '/user-dashboard/dashboard-favourites', label: 'My Favourites', icon: <FiHeart /> },
     { to: '/user-dashboard/dashboard-favourite-services', label: 'Favourite Services', icon: <FiHeart /> },
 ];

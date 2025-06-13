@@ -53,6 +53,8 @@ const AdminProviderApprovalTable = lazy(() => import("./pages/admin/dashboard-co
 const AdminUserManagement = lazy(() => import("./pages/admin/dashboard-controls/AdminUserManagement.jsx"));
 
 import "./App.css";
+import ServiceProviderRequests from "./pages/serviceProvider/ServiceProviderRequests.jsx";
+import MyRequests from "./pages/user-dashboard/dashboard-controls/MyRequestedServices.jsx";
 // import CustomCursor from "./components/common/CustomCursor.jsx";
 
 function App() {
@@ -88,6 +90,7 @@ function App() {
                 <Route path="dashboard-properties" element={<UserPropertyManagement />} />
                 <Route path="dashboard-favourites" element={<Favorites />} />
                 <Route path="dashboard-favourite-services" element={<FavoriteServices />} />
+                <Route path="my/requests" element={<MyRequests />} />
               </Route>
 
               <Route path="/profile" element={<Profile />} />
@@ -97,6 +100,7 @@ function App() {
               <Route path="/add-service" element={<BecomeProvider />} />
               <Route path="/service-provider/me" element={<ServiceProviderProfileView />} />
               <Route path="/update-service-profile" element={<ServiceProviderProfileForm />} />
+              <Route path="/provider/requests" element={<ServiceProviderRequests />} />
             </Route>
 
             {/* Admin Routes */}
