@@ -86,9 +86,11 @@ const requestSlice = createSlice({
             })
             .addCase(deleteRequest.fulfilled, (state, action) => {
                 state.loading = false;
-                state.myRequests = state.myRequests.filter(
-                    (req) => req._id !== action.payload
-                );
+                const id = action.payload;
+
+                // Remove from both user and provider request arrays
+                state.myRequests = state.myRequests.filter((req) => req._id !== id);
+                state.providerRequests = state.providerRequests.filter((req) => req._id !== id);
             })
             .addCase(deleteRequest.rejected, (state, action) => {
                 state.loading = false;

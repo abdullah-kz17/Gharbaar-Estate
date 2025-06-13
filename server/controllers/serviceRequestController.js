@@ -83,11 +83,35 @@ exports.respondToRequest = async (req, res) => {
     }
 };
 
+// exports.deleteRequest = async (req, res) => {
+//     try {
+//         const request = await Request.findById(req.params.id);
+//         if (!request || request.user.toString() !== req.user._id.toString()) {
+//             return res.status(403).json({ message: "Not authorized" });
+//         }
+//
+//         await request.deleteOne();
+//         res.status(200).json({ message: "Request deleted" });
+//     } catch (err) {
+//         res.status(500).json({ message: "Failed to delete request" });
+//     }
+// };
+
 exports.deleteRequest = async (req, res) => {
     try {
         const request = await Request.findById(req.params.id);
-        if (!request || request.user.toString() !== req.user._id.toString()) {
-            return res.status(403).json({ message: "Not authorized" });
+        if (!request) {
+            return res.status(404).json({ message: "Request not found" });
+        }
+
+        // Find provider for current user
+        const provider = await ServiceProvider.findOne({ user: req.user._id });
+
+        const isUserOwner = request.user.toString() === req.user._id.toString();
+        const isProviderOwner = provider && request.provider.toString() === provider._id.toString();
+
+        if (!isUserOwner && !isProviderOwner) {
+            return res.status(403).json({ message: "Not authorized to delete this request" });
         }
 
         await request.deleteOne();
