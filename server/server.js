@@ -29,13 +29,13 @@ app.use(cors())
 app.use(express.json({ limit: '20mb' }));
 app.use(express.urlencoded({ extended: true, limit: '20mb' }));
 
-app.use("/api/auth",authRoute)
-app.use("/api/property" ,propertyRoute)
-app.use("/api/favourite" ,favouriteRoute)
-app.use("/api/serviceProvider" ,serviceRoute)
-app.use("/api/favoriteService" ,favoriteServiceRoute)
-app.use("/api/admin/user" ,userRoutes)
-app.use("/api/request" ,requestRoutes)
+app.use("/api/auth", authRoute)
+app.use("/api/property", propertyRoute)
+app.use("/api/favourite", favouriteRoute)
+app.use("/api/serviceProvider", serviceRoute)
+app.use("/api/favoriteService", favoriteServiceRoute)
+app.use("/api/admin/user", userRoutes)
+app.use("/api/request", requestRoutes)
 app.use("/api/ai", aiRoutes);
 
 
@@ -76,9 +76,9 @@ app.post("/api/contact", async (req, res) => {
         `;
 
     await sendEmail(
-        process.env.RECEIVER_EMAIL,
-        `Contact Form: ${subject}`,
-        html
+      process.env.RECEIVER_EMAIL,
+      `Contact Form: ${subject}`,
+      html
     );
 
     res.status(200).json({ message: "Message sent successfully!" });
@@ -89,7 +89,7 @@ app.post("/api/contact", async (req, res) => {
 });
 
 
-const PORT = 8080;
+const port = process.env.PORT || 5000;
 
 const startServer = async () => {
   try {
@@ -97,8 +97,8 @@ const startServer = async () => {
     await Property.syncIndexes();
 
     console.log('Indexes synced for Property model');
-    app.listen(PORT, () => {
-      console.log(`🚀 Server is running on port ${PORT}`);
+    app.listen(port, () => {
+      console.log(`🚀 Server is running on port ${port}`);
     });
   } catch (error) {
     console.error("❌ Failed to connect to database:", error.message);

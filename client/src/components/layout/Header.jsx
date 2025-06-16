@@ -8,6 +8,7 @@ import {
 } from 'react-icons/fa';
 import ThemeToggle from "../common/ThemeToggle.jsx";
 import { GiPriceTag } from "react-icons/gi";
+import GharbaarLogo from '../common/GharbaarLogo.jsx';
 
 const Header = () => {
     const { isLoggedIn, logout, user } = useAuth();
@@ -36,12 +37,11 @@ const Header = () => {
             <div className="bg-gradient-to-r from-indigo-600 to-purple-600 h-1 w-full"></div>
 
             <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-                <Link to="/" className="flex items-center gap-3">
-                    <img src="/logo2.png" alt="Logo" className="h-8 w-8" />
-                    <span className="text-2xl font-bold text-gray-800 dark:text-white hover:text-indigo-600">
-                        Gharbaar <span className="text-indigo-400">Estate </span>
-                    </span>
-                </Link>
+                <div className="flex items-center gap-3">
+                    <GharbaarLogo />
+
+                </div>
+
 
                 {/* Desktop Nav */}
                 <nav className="hidden md:flex items-center space-x-6">
