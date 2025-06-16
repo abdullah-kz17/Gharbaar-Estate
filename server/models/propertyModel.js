@@ -18,7 +18,7 @@ const propertySchema = new mongoose.Schema({
     },
 
     area: {
-        type: String, // e.g., "5 Marla", "10 Marla", "1 Kanal"
+        type: String,
         required: true,
     },
 
@@ -39,9 +39,9 @@ const propertySchema = new mongoose.Schema({
             },
         },
     },
-    role:{
-        type:String,
-        enum:['user','realtor','admin'],
+    role: {
+        type: String,
+        enum: ['user', 'realtor', 'admin'],
     },
 
     features: {
