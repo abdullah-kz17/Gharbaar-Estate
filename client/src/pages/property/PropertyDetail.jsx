@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { getSingleProperty } from "../../store/thunks/PropertyThunk.js";
 import PropertyDetailCard from "../../components/listings/PropertyDetailCard.jsx";
+import Loader from "../../components/common/Loader.jsx";
 
 const PropertyDetail = () => {
     const { id } = useParams();
@@ -18,7 +19,7 @@ const PropertyDetail = () => {
             <div className="max-w-6xl mx-auto">
                 {loading ? (
                     <p className="text-center text-indigo-600 dark:text-indigo-400 text-xl font-medium animate-pulse mt-20">
-                        Loading property details...
+                        <Loader />
                     </p>
                 ) : error ? (
                     <p className="text-center text-red-500 dark:text-red-400 text-lg mt-20">

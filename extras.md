@@ -15,6 +15,7 @@ customized fields
 // real time chat
 bg-gradient-to-r from-indigo-600 to-purple-600
 
+
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';

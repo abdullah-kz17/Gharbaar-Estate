@@ -4,7 +4,7 @@ const crypto = require("crypto");
 const generateToken = require("../config/generateToken");
 const sendEmail = require("../config/sendEmail");
 const sendSms = require("../config/sendSms");
-const redisClient = require("../config/redisClient");
+// const redisClient = require("../config/redisClient");
 const rateLimit = require("express-rate-limit");
 
 // ========== Rate Limiters ==========
@@ -291,51 +291,51 @@ const resendVerificationEmail = async (req, res) => {
   }
 };
 
-const sendOtp = async (req, res) => {
-  const { phone } = req.body;
-  if (!phone) return res.status(400).json({ message: "Phone number is required", success: false });
+// const sendOtp = async (req, res) => {
+//   const { phone } = req.body;
+//   if (!phone) return res.status(400).json({ message: "Phone number is required", success: false });
 
-  const otp = Math.floor(100000 + Math.random() * 900000).toString();
-  const hashedOtp = crypto.createHash("sha256").update(otp).digest("hex");
+//   const otp = Math.floor(100000 + Math.random() * 900000).toString();
+//   const hashedOtp = crypto.createHash("sha256").update(otp).digest("hex");
 
-  try {
-    await redisClient.setEx(`otp:${phone}`, 300, hashedOtp);
-    await sendSms(phone, `Your verification code is: ${otp}`);
+//   try {
+//     await redisClient.setEx(`otp:${phone}`, 300, hashedOtp);
+//     await sendSms(phone, `Your verification code is: ${otp}`);
 
-    res.status(200).json({ message: "OTP sent", success: true });
-  } catch (error) {
-    console.error("Send OTP error:", error.message);
-    res.status(500).json({ message: "Failed to send OTP", success: false });
-  }
-};
+//     res.status(200).json({ message: "OTP sent", success: true });
+//   } catch (error) {
+//     console.error("Send OTP error:", error.message);
+//     res.status(500).json({ message: "Failed to send OTP", success: false });
+//   }
+// };
 
-const verifyOtp = async (req, res) => {
-  const { phone, otp } = req.body;
-  if (!phone || !otp) return res.status(400).json({ message: "Phone and OTP are required", success: false });
+// const verifyOtp = async (req, res) => {
+//   const { phone, otp } = req.body;
+//   if (!phone || !otp) return res.status(400).json({ message: "Phone and OTP are required", success: false });
 
-  const user = await User.findOne({ phone });
-  if (!user) return res.status(404).json({ message: "User not found", success: false });
+//   const user = await User.findOne({ phone });
+//   if (!user) return res.status(404).json({ message: "User not found", success: false });
 
-  try {
-    const storedHashedOtp = await redisClient.get(`otp:${phone}`);
-    const inputHashedOtp = crypto.createHash("sha256").update(otp).digest("hex");
+//   try {
+//     const storedHashedOtp = await redisClient.get(`otp:${phone}`);
+//     const inputHashedOtp = crypto.createHash("sha256").update(otp).digest("hex");
 
-    if (!storedHashedOtp || storedHashedOtp !== inputHashedOtp) {
-      return res.status(400).json({ message: "Invalid or expired OTP", success: false });
-    }
+//     if (!storedHashedOtp || storedHashedOtp !== inputHashedOtp) {
+//       return res.status(400).json({ message: "Invalid or expired OTP", success: false });
+//     }
 
-    user.isPhoneVerified = true;
-    user.phoneVerifiedAt = new Date();
-    await user.save();
+//     user.isPhoneVerified = true;
+//     user.phoneVerifiedAt = new Date();
+//     await user.save();
 
-    await redisClient.del(`otp:${phone}`);
-    res.status(200).json({ message: "Phone number verified successfully", success: true });
+//     await redisClient.del(`otp:${phone}`);
+//     res.status(200).json({ message: "Phone number verified successfully", success: true });
 
-  } catch (error) {
-    console.error("OTP verification error:", error);
-    res.status(500).json({ message: "OTP verification failed", success: false });
-  }
-};
+//   } catch (error) {
+//     console.error("OTP verification error:", error);
+//     res.status(500).json({ message: "OTP verification failed", success: false });
+//   }
+// };
 
 // ========== Exports ==========
 module.exports = {
@@ -346,8 +346,8 @@ module.exports = {
   updateProfile,
   verifyEmail,
   resendVerificationEmail,
-  sendOtp,
-  verifyOtp,
+  // sendOtp,
+  // verifyOtp,
   getCurrentUser,
   loginLimiter,
   registerLimiter,

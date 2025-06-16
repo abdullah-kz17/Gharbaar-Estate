@@ -7,8 +7,8 @@ const {
     updateProfile,
     forgotPassword,
     resetPassword,
-    verifyOtp,
-    sendOtp,
+    // verifyOtp,
+    // sendOtp,
     verifyEmail,
     getCurrentUser,
     // Rate limiters
@@ -30,7 +30,7 @@ const {
 
 const validateRequest = require('../middlewares/validateRequest');
 const protect = require('../middlewares/authMiddleware');
-const {uploadUserProfile} = require("../config/cloudinary/userProfile");
+const { uploadUserProfile } = require("../config/cloudinary/userProfile");
 
 // Auth and user routes
 router.post(
@@ -73,20 +73,20 @@ router.post(
     resetPassword
 );
 
-router.post(
-    '/send-otp',
-    sendOtpLimiter,
-    sendOtpValidator,
-    validateRequest,
-    sendOtp
-);
+// router.post(
+//     '/send-otp',
+//     sendOtpLimiter,
+//     sendOtpValidator,
+//     validateRequest,
+//     sendOtp
+// );
 
-router.post(
-    '/verify-otp',
-    verifyOtpValidator,
-    validateRequest,
-    verifyOtp
-);
+// router.post(
+//     '/verify-otp',
+//     verifyOtpValidator,
+//     validateRequest,
+//     verifyOtp
+// );
 
 router.get('/verify-email', verifyEmail);
 router.post('/resend-verification', resendVerificationEmail);

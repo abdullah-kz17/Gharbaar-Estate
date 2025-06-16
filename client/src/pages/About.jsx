@@ -115,6 +115,13 @@ export default function About() {
             image: "/images/Ali.jpg",
             social: { linkedin: "#", twitter: "#", instagram: "#" },
         },
+        {
+            name: "Haseeb Asghar",
+            role: "Human Resource",
+            bio: "Dedicated to client satisfaction, Ali leads our support team in helping customers navigate their real estate journey.",
+            image: "/images/Ali.jpg",
+            social: { linkedin: "#", twitter: "#", instagram: "#" },
+        },
     ];
 
     return (

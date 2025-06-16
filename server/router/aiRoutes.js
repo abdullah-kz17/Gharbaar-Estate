@@ -16,13 +16,13 @@ router.post('/analyze-image', upload.single('image'), async (req, res) => {
         const form = new FormData();
         form.append('image', fs.createReadStream(filePath));
 
-        const flaskURL = 'http://192.168.76.30:5001/predict';
+        const flaskURL = 'http://192.168.76.102:5001/predict';
 
         const response = await axios.post(flaskURL, form, {
             headers: form.getHeaders(),
         });
 
-        fs.unlinkSync(filePath); 
+        fs.unlinkSync(filePath);
         res.status(200).json(response.data);
     } catch (error) {
         console.error('AI Prediction Error:', error.message);

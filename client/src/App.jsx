@@ -19,8 +19,8 @@ const Register = lazy(() => import("./pages/auth/Register.jsx"));
 const ForgetPassword = lazy(() => import("./pages/auth/ForgetPassword.jsx"));
 const ResetPassword = lazy(() => import("./pages/auth/ResetPassword.jsx"));
 const VerifyEmail = lazy(() => import("./pages/auth/VerifyEmail.jsx"));
-const VerifyOTP = lazy(() => import("./pages/auth/VerifyPhone.jsx"));
-const SendOtp = lazy(() => import("./pages/auth/SendOtp.jsx"));
+// const VerifyOTP = lazy(() => import("./pages/auth/VerifyPhone.jsx"));
+// const SendOtp = lazy(() => import("./pages/auth/SendOtp.jsx"));
 const PropertyList = lazy(() => import("./pages/property/PropertyList.jsx"));
 const PropertyDetail = lazy(() => import("./pages/property/PropertyDetail.jsx"));
 const UpdateProperty = lazy(() => import("./pages/property/UpdateProperty.jsx"));
@@ -73,8 +73,8 @@ function App() {
             <Route path="/forgot-password" element={<ForgetPassword />} />
             <Route path="/reset-password/:token" element={<ResetPassword />} />
             <Route path="/verify-email" element={<VerifyEmail />} />
-            <Route path="/verify-otp" element={<VerifyOTP />} />
-            <Route path="/send-otp" element={<SendOtp />} />
+            {/* <Route path="/verify-otp" element={<VerifyOTP />} /> */}
+            {/* <Route path="/send-otp" element={<SendOtp />} /> */}
             <Route path="/properties" element={<PropertyList />} />
             <Route path="/property/:id" element={<PropertyDetail />} />
             <Route path="/providers/:id" element={<ServiceProviderDetailPage />} />
