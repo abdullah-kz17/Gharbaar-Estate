@@ -196,3 +196,41 @@ exports.deleteComment = async (req, res) => {
         return res.status(500).json({ message: err.message });
     }
 };
+
+// ✅ Get Blog by ID
+exports.getBlogById = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        if (!id) {
+            return res.status(400).json({
+                success: false,
+                message: "Blog ID is required"
+            });
+        }
+
+        const blog = await Blog.findById(id)
+            .populate("createdBy", "username profilePic")
+            .populate("comments.user", "username profilePic");
+
+        if (!blog) {
+            console.log(`Blog not found with ID: ${id}`);
+            return res.status(404).json({
+                success: false,
+                message: "Blog not found"
+            });
+        }
+
+        console.log(`Successfully retrieved blog with ID: ${id}`);
+        return res.json({
+            success: true,
+            blog
+        });
+    } catch (err) {
+        console.error("Error in getBlogById:", err);
+        return res.status(500).json({
+            success: false,
+            message: err.message || "Error retrieving blog"
+        });
+    }
+};

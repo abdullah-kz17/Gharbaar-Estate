@@ -1,7 +1,7 @@
 // src/redux/blog/blogSlice.js
 import { createSlice } from "@reduxjs/toolkit";
 import {
-    createBlog, getAllBlogs, getBlogBySlug,
+    createBlog, getAllBlogs, getBlogBySlug, getBlogById,
     updateBlog, deleteBlog, toggleLike,
     addComment, updateComment, deleteComment
 } from "../thunks/blogThunks";
@@ -41,6 +41,22 @@ const blogSlice = createSlice({
             .addCase(getAllBlogs.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
+            })
+
+            // Get Blog by ID
+            .addCase(getBlogById.pending, state => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(getBlogById.fulfilled, (state, action) => {
+                state.loading = false;
+                state.singleBlog = action.payload;
+                state.error = null;
+            })
+            .addCase(getBlogById.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+                state.singleBlog = null;
             })
 
             // Get Blog by Slug

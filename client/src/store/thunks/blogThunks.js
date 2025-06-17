@@ -26,6 +26,30 @@ export const getAllBlogs = createAsyncThunk("blog/getAllBlogs", async (_, { reje
     }
 });
 
+// Get Blog by ID
+export const getBlogById = createAsyncThunk("blog/getBlogById", async (id, { rejectWithValue }) => {
+    try {
+        if (!id) {
+            return rejectWithValue("Blog ID is required");
+        }
+
+        const response = await axiosPublic.get(`/blog/${id}`);
+
+        if (!response.data.success) {
+            return rejectWithValue(response.data.message || "Failed to fetch blog");
+        }
+
+        return response.data.blog;
+    } catch (err) {
+        console.error("Error fetching blog by ID:", err);
+        return rejectWithValue(
+            err.response?.data?.message ||
+            err.message ||
+            "Failed to fetch blog"
+        );
+    }
+});
+
 // Get Blog by Slug
 export const getBlogBySlug = createAsyncThunk("blog/getBlogBySlug", async (slug, { rejectWithValue }) => {
     try {
