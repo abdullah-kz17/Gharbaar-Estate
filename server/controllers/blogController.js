@@ -209,7 +209,11 @@ exports.getBlogById = async (req, res) => {
             });
         }
 
-        const blog = await Blog.findById(id)
+        const blog = await Blog.findByIdAndUpdate(
+            id,
+            { $inc: { views: 1 } },
+            { new: true }
+        )
             .populate("createdBy", "username profilePic")
             .populate("comments.user", "username profilePic");
 
