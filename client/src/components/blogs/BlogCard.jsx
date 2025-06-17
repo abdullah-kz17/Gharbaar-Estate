@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { FaRegThumbsUp, FaThumbsUp, FaComment, FaCalendarAlt, FaUser } from "react-icons/fa";
+import { FaRegThumbsUp, FaThumbsUp, FaComment, FaCalendarAlt, FaUser, FaStar } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { toggleLike } from "../../store/thunks/blogThunks";
 import { toast } from "react-toastify";
@@ -17,6 +17,7 @@ const BlogCard = ({ blog }) => {
     likes,
     slug,
     createdBy,
+    isFeatured,
   } = blog;
 
   const dispatch = useDispatch();
@@ -45,11 +46,17 @@ const BlogCard = ({ blog }) => {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
         
-        {/* Category Badge */}
-        <div className="absolute top-4 left-4">
+        {/* Category and Featured Badges */}
+        <div className="absolute top-4 left-4 flex flex-col gap-2">
           <span className="px-3 py-1 bg-indigo-600 dark:bg-indigo-500 text-white text-sm font-medium rounded-full">
             {category}
           </span>
+          {isFeatured && (
+            <span className="px-3 py-1 bg-yellow-500 dark:bg-yellow-600 text-white text-sm font-medium rounded-full flex items-center gap-1">
+              <FaStar className="w-3 h-3" />
+              Featured
+            </span>
+          )}
         </div>
 
         {/* Author Info Overlay */}

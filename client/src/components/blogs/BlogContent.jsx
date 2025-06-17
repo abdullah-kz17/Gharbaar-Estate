@@ -40,7 +40,7 @@ const BlogContent = ({ blog }) => {
           <div className="flex items-center space-x-4">
             {createdBy?.profilePic ? (
               <img
-                src={createdBy.profilePic}
+                src={createdBy.userprofilePic}
                 alt={createdBy.username}
                 className="w-12 h-12 rounded-full border-2 border-white"
               />

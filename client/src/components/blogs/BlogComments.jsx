@@ -95,9 +95,17 @@ const BlogComments = ({ comments = [], onSubmit, onUpdate, onDelete, currentUser
                 {/* Comment Header */}
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-gradient-to-r from-purple-400 to-indigo-500 dark:from-purple-500 dark:to-indigo-600 rounded-full flex items-center justify-center text-white font-semibold">
-                      {comment.user?.username?.[0]?.toUpperCase() || 'U'}
-                    </div>
+                    <div className="w-10 h-10 bg-gradient-to-r from-purple-400 to-indigo-500 dark:from-purple-500 dark:to-indigo-600 rounded-full flex items-center justify-center text-white font-semibold overflow-hidden">
+  {comment.user?.profilePic ? (
+    <img
+      src={comment.user.profilePic}
+      alt={comment.user.username || 'User'}
+      className="w-full h-full object-cover rounded-full"
+    />
+  ) : (
+    comment.user?.username?.[0]?.toUpperCase() || 'U'
+  )}
+</div>
                     <div>
                       <h4 className="font-semibold text-gray-800 dark:text-gray-100">{comment.user?.username || 'Anonymous'}</h4>
                       <p className="text-sm text-gray-500 dark:text-gray-400">
