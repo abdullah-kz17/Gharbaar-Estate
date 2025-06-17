@@ -47,6 +47,7 @@ const Header = () => {
                     <NavItem to="/" label="Home" icon={<FaHome />} />
                     <NavItem to="/properties" label="Properties" icon={<FaList />} />
                     <NavItem to="/services" label="Services" icon={<FaTasks />} />
+                    <NavItem to="/blogs" label="Blogs" icon={<FaTasks />} />
 
                     {isLoggedIn && (
                         <NavItem

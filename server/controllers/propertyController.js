@@ -207,7 +207,7 @@ exports.updateProperty = async (req, res) => {
 
         // Handle uploaded images
         if (req.files && req.files.length > 0) {
-            updates.images = req.files.map(file => file.path); // e.g., Cloudinary URLs
+            updates.images = req.files.map(file => file.path);
         }
 
         const updatedProperty = await Property.findByIdAndUpdate(id, updates, {
@@ -236,7 +236,6 @@ exports.updateProperty = async (req, res) => {
 
 
 // Delete a property by ID
-// Delete a property by ID (only creator can delete)
 exports.deleteProperty = async (req, res) => {
     try {
         const { id } = req.params;
@@ -327,7 +326,7 @@ exports.featureProperty = async (req, res) => {
 exports.getPendingProperties = async (req, res) => {
     try {
         const pendingProperties = await Property.find({ status: 'pending', isApproved: false })
-            .populate('realtorId', 'name email phone role')
+            .populate('realtorId', 'username email phone role')
             .populate('createdBy', 'username email role');
 
         res.status(200).json({

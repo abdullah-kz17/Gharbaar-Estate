@@ -16,8 +16,9 @@ const propertyRoute = require("./router/propertyRoutes.js")
 const favouriteRoute = require("./router/favouriteRoutes.js")
 const serviceRoute = require("./router/serviceProviderRoutes.js")
 const favoriteServiceRoute = require("./router/favouriteServiceRoute.js")
-const userRoutes = require("./router/userRoutes.js")
-const requestRoutes = require("./router/serviceRequestRoutes.js")
+const userRoute = require("./router/userRoutes.js")
+const requestRoute = require("./router/serviceRequestRoutes.js")
+const blogRoute = require("./router/blogRoutes.js")
 const aiRoutes = require("./router/aiRoutes.js")
 
 const Property = require('./models/propertyModel');
@@ -34,8 +35,9 @@ app.use("/api/property", propertyRoute)
 app.use("/api/favourite", favouriteRoute)
 app.use("/api/serviceProvider", serviceRoute)
 app.use("/api/favoriteService", favoriteServiceRoute)
-app.use("/api/admin/user", userRoutes)
-app.use("/api/request", requestRoutes)
+app.use("/api/admin/user", userRoute)
+app.use("/api/request", requestRoute)
+app.use("/api/blog", blogRoute)
 app.use("/api/ai", aiRoutes);
 
 

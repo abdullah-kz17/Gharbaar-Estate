@@ -29,7 +29,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="bg-gray-900 dark:bg-gray-950 text-white dark:text-gray-200 pt-16 pb-8 relative">
+    <footer className="bg-gray-900 dark:bg-gray-950 text-white dark:text-gray-200 pt-16 pb-8 relative ">
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-600 to-purple-600"></div>
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">

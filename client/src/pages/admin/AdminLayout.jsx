@@ -1,8 +1,9 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { FiHome, FiList, FiClock, FiUserCheck, FiLogOut } from 'react-icons/fi';
-import { FaUsers } from 'react-icons/fa';
+import { FaAddressBook, FaUsers } from 'react-icons/fa';
 import { useAuth } from '../../context/AuthContext';
 import { useState } from 'react';
+import Blogs from '../Blogs';
 
 const navItems = [
     { to: '/admin-dashboard', label: 'Dashboard', icon: <FiHome />, end: true },
@@ -10,6 +11,7 @@ const navItems = [
     { to: '/admin-dashboard/pending-approvals', label: 'Pending Approvals', icon: <FiClock /> },
     { to: '/admin-dashboard/pending-providers-approval', label: 'Pending Providers Approvals', icon: <FiUserCheck /> },
     { to: '/admin-dashboard/admin-users', label: 'Users', icon: <FaUsers /> },
+    { to: '/admin-dashboard/add-blog', label: 'Create Blog', icon: <FaAddressBook /> },
 ];
 
 const AdminLayout = () => {
