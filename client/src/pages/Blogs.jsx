@@ -98,29 +98,100 @@ const Blogs = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
-      {/* Hero Section */}
-      <div className="bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-700 dark:to-purple-700 text-white py-16">
-        <div className="max-w-6xl mx-auto px-4 text-center">
-          <h1 className="text-5xl font-bold mb-4">
-            Discover Amazing Content
-          </h1>
-          <p className="text-xl opacity-90 mb-8">
-            Explore our collection of insightful articles and stories
-          </p>
-          
-          {/* Admin Add Blog Button */}
-          {user?.role === "admin" && (
-            <Link 
-              to="/admin-dashboard/add-blog"
-              className="inline-flex items-center bg-white dark:bg-gray-800 text-indigo-600 dark:text-indigo-400 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 dark:hover:bg-gray-700 transition shadow-lg"
-            >
-              <FaPlus className="mr-2" />
-              Create New Blog
-            </Link>
-          )}
+      {/* Enhanced Hero Section */}
+      <div className="relative overflow-hidden">
+        {/* Background Pattern with Gradient Overlay */}
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 opacity-90"></div>
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute inset-0" style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+              backgroundSize: '60px 60px'
+            }}></div>
+          </div>
+        </div>
+
+        {/* Hero Content */}
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+            {/* Left Content */}
+            <div className="flex-1 text-center md:text-left">
+              {/* Decorative Line */}
+              <div className="hidden md:block w-16 h-1 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full mb-6"></div>
+              
+              <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">
+                Discover Amazing
+                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-pink-300 to-purple-300 mt-2">
+                  Stories & Insights
+                </span>
+              </h1>
+              <p className="text-lg text-white/90 mb-6 max-w-xl">
+                Explore our collection of insightful articles and stories about real estate and property management
+              </p>
+
+              {/* Quick Stats */}
+              <div className="flex gap-8">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-white mb-1">{blogs.length}</div>
+                  <div className="text-white/80 text-sm">Articles</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-white mb-1">{categories.length}</div>
+                  <div className="text-white/80 text-sm">Categories</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-white mb-1">
+                    {blogs.reduce((acc, blog) => acc + (blog.views || 0), 0)}
+                  </div>
+                  <div className="text-white/80 text-sm">Views</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Content */}
+            <div className="flex-1 flex flex-col gap-6">
+              {/* Search Bar */}
+              <div className="relative group">
+                <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-purple-500 rounded-xl blur opacity-30 group-hover:opacity-50 transition-opacity"></div>
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Search blogs..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full px-6 py-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl text-white placeholder-white/60 focus:outline-none focus:border-white/40 transition-all duration-300"
+                  />
+                  <FaSearch className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white/60" />
+                </div>
+              </div>
+
+              {/* Admin Add Blog Button */}
+              {user?.role === "admin" && (
+                <Link 
+                  to="/admin-dashboard/add-blog"
+                  className="group relative inline-flex items-center justify-center gap-2 bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white px-6 py-3 rounded-xl font-medium transition-all duration-300 border border-white/20 hover:border-white/40"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-purple-500 rounded-xl blur opacity-0 group-hover:opacity-20 transition-opacity"></div>
+                  <FaPlus className="text-sm group-hover:rotate-90 transition-transform duration-300" />
+                  <span>Create New Blog</span>
+                </Link>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Decorative Wave */}
+        <div className="absolute bottom-0 left-0 right-0">
+          <svg className="w-full h-16 text-gray-50 dark:text-gray-900" viewBox="0 0 1440 100" preserveAspectRatio="none">
+            <path
+              fill="currentColor"
+              d="M0,32L48,37.3C96,43,192,53,288,58.7C384,64,480,64,576,58.7C672,53,768,43,864,42.7C960,43,1056,53,1152,53.3C1248,53,1344,43,1392,37.3L1440,32L1440,100L1392,100C1344,100,1248,100,1152,100C1056,100,960,100,864,100C768,100,672,100,576,100C480,100,384,100,288,100C192,100,96,100,48,100L0,100Z"
+            ></path>
+          </svg>
         </div>
       </div>
 
+      {/* Rest of the content */}
       <div className="max-w-6xl mx-auto px-4 py-8">
         {/* Search and Filter Section */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
