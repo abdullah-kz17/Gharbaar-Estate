@@ -33,8 +33,9 @@ const Header = () => {
     const isProvider = user?.isServiceProvider && user?.serviceProviderProfile;
 
     return (
-        <header className="bg-white dark:bg-gray-900 shadow-lg sticky top-0 z-50 transition-all">
+        <>
             <div className="bg-gradient-to-r from-indigo-600 to-purple-600 h-1 w-full"></div>
+        <header className="bg-white dark:bg-gray-900 shadow-lg sticky top-0 z-50 transition-all px-10">
 
             <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -164,9 +165,12 @@ const Header = () => {
                     <div className="pt-2">
                         <ThemeToggle />
                     </div>
-                </div>
+                    </div>
+                    
             )}
-        </header>
+            </header>
+        </>
+            
     );
 };
 

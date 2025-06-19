@@ -99,7 +99,7 @@ const Blogs = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
       {/* Enhanced Hero Section */}
-      <div className="relative overflow-hidden">
+      <div className="relative overflow-hidden px-8">
         {/* Background Pattern with Gradient Overlay */}
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 opacity-90"></div>

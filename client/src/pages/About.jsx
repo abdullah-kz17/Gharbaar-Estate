@@ -80,49 +80,50 @@ export default function About() {
     };
 
     const teamMembers = [
-        {
-            name: "Abdullah Khan",
-            role: "Founder & CEO",
-            bio: "With over 10 years in real estate tech, Abdullah leads our vision to revolutionize the housing market through AI innovation.",
-            image: "/images/Abdullah.jpeg",
-            social: { linkedin: "#", twitter: "#", instagram: "#" },
-        },
-        {
-            name: "Bilawal Hassan",
-            role: "CTO",
-            bio: "Bilawal brings extensive expertise in AI and machine learning to create our intelligent property matching algorithms.",
-            image: "/images/Bilawal.jpg",
-            social: { linkedin: "#", twitter: "#", instagram: "#" },
-        },
-        {
-            name: "Husnain Ali",
-            role: "Head of Design",
-            bio: "A visionary designer focused on creating intuitive, beautiful interfaces for our renovation simulations and virtual tours.",
-            image: "/images/Husnain.jpeg",
-            social: { linkedin: "#", twitter: "#", instagram: "#" },
-        },
-        {
-            name: "Muhammad Haris",
-            role: "Operations Director",
-            bio: "Muhammad ensures seamless coordination between our platform, contractors, and clients for exceptional service delivery.",
-            image: "/images/Haris.jpg",
-            social: { linkedin: "#", twitter: "#", instagram: "#" },
-        },
-        {
-            name: "Ali Husnain",
-            role: "Customer Success Manager",
-            bio: "Dedicated to client satisfaction, Ali leads our support team in helping customers navigate their real estate journey.",
-            image: "/images/Ali.jpg",
-            social: { linkedin: "#", twitter: "#", instagram: "#" },
-        },
-        {
-            name: "Haseeb Asghar",
-            role: "Human Resource",
-            bio: "Dedicated to client satisfaction, Ali leads our support team in helping customers navigate their real estate journey.",
-            image: "/images/Ali.jpg",
-            social: { linkedin: "#", twitter: "#", instagram: "#" },
-        },
-    ];
+    {
+        name: "Abdullah Khan",
+        role: "Frontend Developer & Lead",
+        bio: "Abdullah worked on building interactive UI components using React and implemented user-friendly navigation across the platform.",
+        image: "/images/Abdullah.jpeg",
+        social: { linkedin: "#", twitter: "#", instagram: "#" },
+    },
+    {
+        name: "Bilawal Hassan",
+        role: "Backend Developer",
+        bio: "Bilawal handled Node.js and Express backend development, focusing on secure API creation and MongoDB database integration.",
+        image: "/images/Bilawal.jpg",
+        social: { linkedin: "#", twitter: "#", instagram: "#" },
+    },
+    {
+        name: "Husnain Ali",
+        role: "UI/UX Designer",
+        bio: "Husnain led the design efforts using Figma and implemented clean layouts, enhancing the user experience and project presentation.",
+        image: "/images/Husnain.jpeg",
+        social: { linkedin: "#", twitter: "#", instagram: "#" },
+    },
+    {
+        name: "Muhammad Haris",
+        role: "Project Manager",
+        bio: "Haris coordinated tasks among team members, managed GitHub workflows, and ensured that deadlines and milestones were met effectively.",
+        image: "/images/Haris.jpg",
+        social: { linkedin: "#", twitter: "#", instagram: "#" },
+    },
+    {
+        name: "Ali Husnain",
+        role: "QA & Deployment Lead",
+        bio: "Ali focused on testing core features, fixing bugs, and deploying the MERN stack application to production using services like Render/Heroku.",
+        image: "/images/Ali.jpg",
+        social: { linkedin: "#", twitter: "#", instagram: "#" },
+    },
+    {
+        name: "Haseeb Asghar",
+        role: "Documentation & Research",
+        bio: "Haseeb compiled project documentation, researched real estate features, and contributed to writing detailed reports and presentations.",
+        image: "/images/Haseeb.jpg", // Make sure you update this image
+        social: { linkedin: "#", twitter: "#", instagram: "#" },
+    },
+];
+
 
     return (
         <div className="bg-gray-50 dark:bg-gray-900 overflow-hidden transition-colors duration-500">
@@ -133,7 +134,7 @@ export default function About() {
             <CoreValuesSection isVisible={isVisible} />
             <Stats isVisible={isVisible.stats} />
             <Journey isVisible={isVisible} />
-            <section id="contact" className="px-4 sm:px-6 lg:px-8">
+            <section id="contact">
                 <Contact isVisible={isVisible.contact} />
             </section>
         </div>

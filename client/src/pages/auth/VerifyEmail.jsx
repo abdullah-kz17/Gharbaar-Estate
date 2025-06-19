@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { axiosPublic } from '../../utils/axiosInstance';
 import { toast } from 'react-toastify';
@@ -7,6 +7,7 @@ export default function VerifyEmail() {
     const location = useLocation();
     const navigate = useNavigate();
     const [verifying, setVerifying] = useState(true);
+    const hasVerified = useRef(false);
 
     const queryParams = new URLSearchParams(location.search);
     const token = queryParams.get('token');
@@ -19,6 +20,9 @@ export default function VerifyEmail() {
                 navigate('/login');
                 return;
             }
+
+            if (hasVerified.current) return;
+            hasVerified.current = true;
 
             try {
                 const { data } = await axiosPublic.get(`/auth/verify-email?token=${token}&email=${email}`);
@@ -36,6 +40,11 @@ export default function VerifyEmail() {
         };
 
         verifyEmail();
+
+        // Cleanup function
+        return () => {
+            hasVerified.current = true;
+        };
     }, [token, email, navigate]);
 
     return (
