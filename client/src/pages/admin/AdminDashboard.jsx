@@ -33,11 +33,11 @@ const StatCard = React.memo(({ title, value, Icon, color }) => (
 ));
 
 // -------------------- Info Card --------------------
-const InfoCard = React.memo(({ title, items, icon: Icon, type }) => (
+const InfoCard = React.memo(({ title, items, icon, type }) => (
     <div className="bg-white dark:bg-gray-900 shadow-lg rounded-xl border border-gray-200 dark:border-gray-700 p-6">
         <div className="flex justify-between items-center mb-4">
             <h3 className="text-xl font-bold text-gray-800 dark:text-white">{title}</h3>
-            {Icon && <Icon className="text-indigo-500 w-6 h-6" />}
+            {icon && React.createElement(icon, { className: "text-indigo-500 w-6 h-6" })}
         </div>
         {items?.length > 0 ? (
             <ul className="space-y-3 max-h-72 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-700">
@@ -77,22 +77,22 @@ const InfoCard = React.memo(({ title, items, icon: Icon, type }) => (
 // -------------------- Admin Dashboard --------------------
 const AdminDashboard = () => {
     const dispatch = useDispatch();
-    const { properties, pendingProperties } = useSelector((state) => state.property);
+    const { properties, total, pendingTotal } = useSelector((state) => state.property);
     const { providers } = useSelector((state) => state.serviceProvider);
     const { users } = useSelector((state) => state.adminUsers);
 
     useEffect(() => {
         dispatch(getAllProperties());
         dispatch(getPendingProperties());
-        dispatch(adminGetAllProviders());
+        dispatch(adminGetAllProviders({ page: 1, limit: 12 }));
+        dispatch(adminGetAllProviders({ page: 1, limit: 1, pending: true }));
         dispatch(getAllUsers());
     }, [dispatch]);
 
-    const totalProperties = properties?.length || 0;
-    const pendingCount = pendingProperties?.length || 0;
+    const totalProperties = total || 0;
+    const pendingCount = pendingTotal || 0;
     const featuredCount = properties?.filter((p) => p.isFeatured).length || 0;
-    const pendingProviders = providers?.filter((p) => !p.isApproved) || [];
-    const pendingProvidersCount = pendingProviders.length;
+    const pendingProvidersCount = useSelector((state) => state.serviceProvider.pendingTotal) || 0;
     const totalProviders = providers?.length || 0;
     const totalUsers = users?.length || 0;
 
@@ -159,7 +159,7 @@ const AdminDashboard = () => {
                     />
                     <InfoCard
                         title="Pending Providers"
-                        items={pendingProviders?.slice(0, 5)}
+                        items={providers?.slice(0, 5)}
                         icon={FaUserTie}
                         type="provider"
                     />

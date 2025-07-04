@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserProperties, deleteProperty } from "../../../store/thunks/PropertyThunk.js";
 import { toast } from "react-toastify";
@@ -6,15 +6,18 @@ import { FiTrash2, FiEdit2, FiEye } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import Loader from "../../../components/common/Loader.jsx";
 import PropertyTable from "../../../components/admin/PropertyTable.jsx"
+import Pagination from '../../../components/common/Pagination.jsx';
 
 const UserPropertyManagement = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { userProperties, loading } = useSelector((state) => state.property);
+    const { userProperties, loading, page, totalPages } = useSelector((state) => state.property);
+    const [currentPage, setCurrentPage] = useState(1);
+    const limit = 12;
 
     useEffect(() => {
-        dispatch(getUserProperties());
-    }, [dispatch]);
+        dispatch(getUserProperties({ page: currentPage, limit }));
+    }, [dispatch, currentPage]);
 
     const handleDelete = (id) => {
         if (window.confirm("Are you sure you want to delete this property?")) {
@@ -82,10 +85,17 @@ const UserPropertyManagement = () => {
                         alt="No properties"
                         className="w-32 h-32 mx-auto mb-6 opacity-60"
                     />
-                    <p className="text-xl font-medium">You haven’t added any properties yet.</p>
+                    <p className="text-xl font-medium">You haven't added any properties yet.</p>
                 </div>
             ) : (
-                <PropertyTable headers={headers} rows={rows} />
+                <>
+                    <PropertyTable headers={headers} rows={rows} />
+                    <Pagination
+                        currentPage={page}
+                        totalPages={totalPages || 1}
+                        onPageChange={setCurrentPage}
+                    />
+                </>
             )}
         </div>
     );

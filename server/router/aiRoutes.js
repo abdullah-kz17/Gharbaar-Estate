@@ -16,7 +16,7 @@ router.post('/analyze-image', upload.single('image'), async (req, res) => {
         const form = new FormData();
         form.append('image', fs.createReadStream(filePath));
 
-        const flaskURL = 'http://192.168.75.122:5001/predict';
+        const flaskURL = 'http://192.168.181.122:5001/predict';
 
         const response = await axios.post(flaskURL, form, {
             headers: form.getHeaders(),

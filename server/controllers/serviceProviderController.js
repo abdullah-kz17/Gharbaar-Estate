@@ -110,6 +110,9 @@ exports.deleteServiceProvider = async (req, res) => {
 exports.getAllApprovedProviders = async (req, res) => {
     try {
         const { rating, service, city, search } = req.query;
+        const page = parseInt(req.query.page) > 0 ? parseInt(req.query.page) : 1;
+        const limit = parseInt(req.query.limit) > 0 ? parseInt(req.query.limit) : 12;
+        const skip = (page - 1) * limit;
 
         let filter = {
             isApproved: true,
@@ -140,11 +143,21 @@ exports.getAllApprovedProviders = async (req, res) => {
             ];
         }
 
-        const providers = await ServiceProvider.find(filter)
-            .populate("user", "username email profilePic")
-            .sort({ averageRating: -1 }); // optional: sort by rating
+        const [providers, total] = await Promise.all([
+            ServiceProvider.find(filter)
+                .populate("user", "username email profilePic")
+                .sort({ isFeatured: -1, averageRating: -1, createdAt: -1 })
+                .skip(skip)
+                .limit(limit),
+            ServiceProvider.countDocuments(filter)
+        ]);
 
-        res.status(200).json({ providers });
+        res.status(200).json({
+            providers,
+            total,
+            page,
+            totalPages: Math.ceil(total / limit)
+        });
     } catch (err) {
         console.error("Filter error:", err);
         res.status(500).json({ message: "Fetch error with filters" });
@@ -169,11 +182,34 @@ exports.getFeaturedProviders = async (req, res) => {
 
 // ---------------------- ADMIN CONTROLS ----------------------
 
-// Admin: Get all providers
+// Admin: Get all providers (with pagination and pending filter)
 exports.adminGetAllProviders = async (req, res) => {
     try {
-        const providers = await ServiceProvider.find().populate("user", "username email profilePic");
-        res.status(200).json({ data: providers });
+        const page = parseInt(req.query.page) > 0 ? parseInt(req.query.page) : 1;
+        const limit = parseInt(req.query.limit) > 0 ? parseInt(req.query.limit) : 12;
+        const skip = (page - 1) * limit;
+        const pending = req.query.pending === 'true';
+
+        let filter = {};
+        if (pending) {
+            filter.isApproved = false;
+        }
+
+        const [providers, total] = await Promise.all([
+            ServiceProvider.find(filter)
+                .populate("user", "username email profilePic")
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(limit),
+            ServiceProvider.countDocuments(filter)
+        ]);
+
+        res.status(200).json({
+            providers,
+            total,
+            page,
+            totalPages: Math.ceil(total / limit)
+        });
     } catch (err) {
         res.status(500).json({ message: "Server error" });
     }

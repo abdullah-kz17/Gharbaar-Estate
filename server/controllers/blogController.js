@@ -25,10 +25,27 @@ exports.createBlog = async (req, res) => {
 // ✅ Get All Published Blogs
 exports.getAllBlogs = async (req, res) => {
     try {
-        const blogs = await Blog.find({ isDeleted: false, status: "published" })
-            .populate("createdBy", "username profilePic")
-            .sort({ createdAt: -1 });
-        return res.json({ success: true, blogs });
+        const page = parseInt(req.query.page) > 0 ? parseInt(req.query.page) : 1;
+        const limit = parseInt(req.query.limit) > 0 ? parseInt(req.query.limit) : 9;
+        const skip = (page - 1) * limit;
+        const filter = { isDeleted: false, status: "published" };
+
+        const [blogs, total] = await Promise.all([
+            Blog.find(filter)
+                .populate("createdBy", "username profilePic")
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(limit),
+            Blog.countDocuments(filter)
+        ]);
+
+        return res.json({
+            success: true,
+            blogs,
+            total,
+            page,
+            totalPages: Math.ceil(total / limit)
+        });
     } catch (err) {
         return res.status(500).json({ success: false, message: err.message });
     }

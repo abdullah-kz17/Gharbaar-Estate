@@ -60,14 +60,16 @@ const BlogForm = ({ onSubmit }) => {
     return (
         <form
             onSubmit={handleSubmit}
-            className="max-w-3xl mx-auto p-6 bg-gradient-to-tr from-indigo-600 to-purple-700 rounded-xl shadow-2xl text-white space-y-6"
+            className="max-w-2xl mx-auto bg-white dark:bg-gray-900 rounded-2xl shadow-2xl p-8 space-y-8 border border-gray-100 dark:border-gray-800 mt-10"
         >
-            <h2 className="text-3xl font-semibold text-center">Create a New Blog</h2>
+            <h2 className="text-3xl font-bold text-center text-indigo-700 dark:text-indigo-200 mb-2 tracking-tight">Create a New Blog</h2>
+            <p className="text-center text-gray-500 dark:text-gray-400 mb-6">Share your insights, stories, and expertise with the world!</p>
 
-            {error && <div className="bg-red-500 text-white px-4 py-2 rounded">{error}</div>}
+            {error && <div className="bg-red-100 text-red-700 px-4 py-2 rounded mb-4 text-center font-medium">{error}</div>}
 
+            {/* Title */}
             <div>
-                <label className="block text-sm font-medium mb-1">Title</label>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-200">Title <span className="text-red-500">*</span></label>
                 <input
                     name="title"
                     type="text"
@@ -75,90 +77,91 @@ const BlogForm = ({ onSubmit }) => {
                     required
                     value={form.title}
                     onChange={handleChange}
-                    className="w-full px-4 py-2 rounded bg-white text-black focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-400 dark:focus:ring-indigo-600 focus:border-indigo-400 dark:focus:border-indigo-600 transition"
+                    placeholder="Enter a catchy blog title"
                 />
             </div>
 
+            {/* Excerpt */}
             <div>
-                <label className="block text-sm font-medium mb-1">Excerpt (Optional)</label>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-200">Excerpt</label>
                 <textarea
                     name="excerpt"
                     maxLength="300"
                     rows={2}
                     value={form.excerpt}
                     onChange={handleChange}
-                    className="w-full px-4 py-2 rounded bg-white text-black focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-400 dark:focus:ring-indigo-600 focus:border-indigo-400 dark:focus:border-indigo-600 transition"
+                    placeholder="A short summary or teaser for your blog (optional)"
                 />
             </div>
 
+            {/* Content */}
             <div>
-                <label className="block text-sm font-medium mb-1">Content</label>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-200">Content <span className="text-red-500">*</span></label>
                 <textarea
                     name="content"
                     required
-                    rows={6}
+                    rows={8}
                     value={form.content}
                     onChange={handleChange}
-                    className="w-full px-4 py-2 rounded bg-white text-black focus:outline-none focus:ring-2 focus:ring-purple-600"
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-400 dark:focus:ring-indigo-600 focus:border-indigo-400 dark:focus:border-indigo-600 transition min-h-[180px]"
+                    placeholder="Write your blog content here..."
                 />
             </div>
 
-            <div>
-                <label className="block text-sm font-medium mb-1">Category</label>
-                <select
-                    name="category"
-                    value={form.category}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2 rounded bg-white text-black focus:outline-none"
-                >
-                    {[
-                        "Property Buying",
-                        "Property Selling",
-                        "AI Tools",
-                        "Renovation Tips",
-                        "Interior Design",
-                        "Neighborhood Guides",
-                        "Market Predictions",
-                        "Maintenance Advice",
-                        "Other",
-                    ].map((cat) => (
-                        <option key={cat} value={cat}>{cat}</option>
-                    ))}
-                </select>
-            </div>
-
-            <div>
-                <label className="block text-sm font-medium mb-1">Tags (comma-separated)</label>
-                <input
-                    name="tags"
-                    type="text"
-                    value={form.tags}
-                    onChange={handleChange}
-                    placeholder="e.g. real estate, renovation"
-                    className="w-full px-4 py-2 rounded bg-white text-black focus:outline-none focus:ring-2 focus:ring-indigo-400"
-                />
-            </div>
-
-            <div>
-                <label className="block text-sm font-medium mb-2">Featured Image</label>
-                <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    className="block w-full text-sm text-white file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-500 file:text-white hover:file:bg-purple-600"
-                />
-                {preview && (
-                    <img
-                        src={preview}
-                        alt="Preview"
-                        className="mt-3 rounded shadow-lg max-h-52 object-cover"
+            {/* Category & Tags */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-200">Category</label>
+                    <select
+                        name="category"
+                        value={form.category}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-400 dark:focus:ring-indigo-600 focus:border-indigo-400 dark:focus:border-indigo-600 transition"
+                    >
+                        {["Property Buying","Property Selling","AI Tools","Renovation Tips","Interior Design","Neighborhood Guides","Market Predictions","Maintenance Advice","Other"].map((cat) => (
+                            <option key={cat} value={cat}>{cat}</option>
+                        ))}
+                    </select>
+                </div>
+                <div>
+                    <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-200">Tags <span className="text-xs text-gray-400">(comma-separated)</span></label>
+                    <input
+                        name="tags"
+                        type="text"
+                        value={form.tags}
+                        onChange={handleChange}
+                        placeholder="e.g. real estate, renovation"
+                        className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-400 dark:focus:ring-indigo-600 focus:border-indigo-400 dark:focus:border-indigo-600 transition"
                     />
-                )}
+                </div>
             </div>
 
+            {/* Image Upload & Preview */}
+            <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-200">Featured Image</label>
+                <div className="flex items-center gap-6">
+                    <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                        className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+                    />
+                    {preview && (
+                        <img
+                            src={preview}
+                            alt="Preview"
+                            className="w-28 h-20 object-cover rounded-lg border border-gray-200 shadow-md"
+                        />
+                    )}
+                </div>
+            </div>
+
+            {/* Submit Button */}
             <button
                 type="submit"
-                className="w-full bg-purple-800 hover:bg-indigo-700 py-3 rounded text-lg font-semibold transition"
+                className="w-full py-3 px-6 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold text-lg shadow-lg transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-indigo-300 dark:focus:ring-indigo-700 mt-4"
             >
                 Submit Blog
             </button>

@@ -33,7 +33,7 @@ const UserDashboard = () => {
     }, [dispatch]);
 
 
-    const { userProperties } = useSelector((state) => state.property);
+    const { userProperties, total: userTotal } = useSelector((state) => state.property);
     const { favorites: favoritePropertiesRaw } = useSelector((state) => state.favorite);
     const { favorites: favoriteServicesRaw } = useSelector((state) => state.favoriteServices);
 
@@ -55,6 +55,7 @@ const UserDashboard = () => {
         })
         : [];
 
+    // Pending/approved counts (fallback to current page if total not available)
     const pending = userProperties?.filter(p => !p.isApproved).length || 0;
     const approved = userProperties?.filter(p => p.isApproved).length || 0;
 
@@ -91,6 +92,7 @@ const UserDashboard = () => {
                         color="from-indigo-500 to-purple-600"
                     />
                 </div>
+               
             </div>
         </div>
     );

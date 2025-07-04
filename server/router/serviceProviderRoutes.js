@@ -40,6 +40,7 @@ router.get("/reviews/:id", getReviewsForProvider);
 
 // PUBLIC ROUTES — order matters!
 router.get("/featured", getFeaturedProviders);
+// GET all approved providers (supports ?page & ?limit for pagination)
 router.get("/", getAllApprovedProviders);
 router.get("/:id", getServiceProviderById);
 

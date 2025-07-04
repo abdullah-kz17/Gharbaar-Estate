@@ -27,6 +27,10 @@ const initialState = {
     loading: false,
     error: null,
     success: null,
+    page: 1,
+    totalPages: 1,
+    total: 0,
+    pendingTotal: 0,
 };
 
 const serviceProviderSlice = createSlice({
@@ -72,13 +76,27 @@ const serviceProviderSlice = createSlice({
             // ✅ Approved providers
             .addCase(getAllApprovedProviders.fulfilled, (state, action) => {
                 state.providers = action.payload.providers;
+                state.page = action.payload.page || 1;
+                state.totalPages = action.payload.totalPages || 1;
+                state.total = action.payload.total || 0;
             })
             // ✅ Featured
             .addCase(getFeaturedProviders.fulfilled, (state, action) => {
                 state.featured = action.payload;
             })
             .addCase(adminGetAllProviders.fulfilled, (state, action) => {
-                state.providers = action.payload;
+                // If pending filter is used, store pendingTotal
+                if (action.meta && action.meta.arg && action.meta.arg.pending) {
+                    state.providers = action.payload.providers;
+                    state.page = action.payload.page || 1;
+                    state.totalPages = action.payload.totalPages || 1;
+                    state.pendingTotal = action.payload.total || 0;
+                } else {
+                    state.providers = action.payload.providers;
+                    state.page = action.payload.page || 1;
+                    state.totalPages = action.payload.totalPages || 1;
+                    state.total = action.payload.total || 0;
+                }
             })
 
             .addCase(adminApproveProvider.fulfilled, (state, action) => {

@@ -17,10 +17,10 @@ export const createBlog = createAsyncThunk("blog/createBlog", async (formData, {
 });
 
 // Get All Blogs
-export const getAllBlogs = createAsyncThunk("blog/getAllBlogs", async (_, { rejectWithValue }) => {
+export const getAllBlogs = createAsyncThunk("blog/getAllBlogs", async ({ page = 1, limit = 9 } = {}, { rejectWithValue }) => {
     try {
-        const response = await axiosPublic.get("/blog");
-        return response.data.blogs;
+        const response = await axiosPublic.get(`/blog?page=${page}&limit=${limit}`);
+        return response.data;
     } catch (err) {
         return rejectWithValue(err.response.data.message);
     }

@@ -26,6 +26,12 @@ const initialState = {
     error: null,
     success: false,
     adminMessage: null,
+    page: 1,
+    totalPages: 1,
+    total: 0,
+    pendingPage: 1,
+    pendingTotalPages: 1,
+    pendingTotal: 0,
 };
 
 const propertySlice = createSlice({
@@ -44,6 +50,12 @@ const propertySlice = createSlice({
             state.error = null;
             state.success = false;
             state.adminMessage = null;
+            state.page = 1;
+            state.totalPages = 1;
+            state.total = 0;
+            state.pendingPage = 1;
+            state.pendingTotalPages = 1;
+            state.pendingTotal = 0;
         },
 
         removePropertyFromPending: (state, action) => {
@@ -66,6 +78,9 @@ const propertySlice = createSlice({
             .addCase(getAllProperties.fulfilled, (state, { payload }) => {
                 state.loading = false;
                 state.properties = payload.properties;
+                state.page = payload.page || 1;
+                state.totalPages = payload.totalPages || 1;
+                state.total = payload.total || 0;
                 state.success = true;
             })
 
@@ -105,7 +120,10 @@ const propertySlice = createSlice({
             // ADMIN: Get Pending Properties
             .addCase(getPendingProperties.fulfilled, (state, { payload }) => {
                 state.loading = false;
-                state.pendingProperties = payload;
+                state.pendingProperties = payload.properties;
+                state.pendingPage = payload.page || 1;
+                state.pendingTotalPages = payload.totalPages || 1;
+                state.pendingTotal = payload.total || 0;
                 state.success = true;
             })
 

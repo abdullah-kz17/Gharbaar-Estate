@@ -28,9 +28,9 @@ export const createProperty = createAsyncThunk(
 // READ ALL
 export const getAllProperties = createAsyncThunk(
     'property/getAllProperties',
-    async (_, thunkApi) => {
+    async ({ page = 1, limit = 12 } = {}, thunkApi) => {
         try {
-            const {data} = await axiosPublic.get("/property/");
+            const {data} = await axiosPublic.get(`/property/?page=${page}&limit=${limit}`);
             return data;
         } catch (error) {
             return thunkApi.rejectWithValue(
@@ -43,9 +43,9 @@ export const getAllProperties = createAsyncThunk(
 // USER: Get Properties of Logged-In User
 export const getUserProperties = createAsyncThunk(
     'property/getUserProperties',
-    async (_, thunkApi) => {
+    async ({ page = 1, limit = 12 } = {}, thunkApi) => {
         try {
-            const {data} = await axiosPrivate.get('/property/user/properties');
+            const {data} = await axiosPrivate.get(`/property/user/properties?page=${page}&limit=${limit}`);
             return data;
         } catch (error) {
             return thunkApi.rejectWithValue(
@@ -105,10 +105,10 @@ export const deleteProperty = createAsyncThunk(
 // ADMIN: Get Pending Properties
 export const getPendingProperties = createAsyncThunk(
     'property/getPendingProperties',
-    async (_, thunkApi) => {
+    async ({ page = 1, limit = 12 } = {}, thunkApi) => {
         try {
-            const {data} = await axiosPrivate.get('/property/approval/pending-properties');
-            return data.properties;
+            const {data} = await axiosPrivate.get(`/property/approval/pending-properties?page=${page}&limit=${limit}`);
+            return data;
         } catch (error) {
             return thunkApi.rejectWithValue(error.response?.data?.message || "Failed to get pending properties");
         }

@@ -59,14 +59,16 @@ const AdminLayout = () => {
                             end={end}
                             className={({ isActive }) =>
                                 `flex items-center gap-3 px-4 py-2 rounded-lg transition-all
-                 focus:outline-none focus:ring-2 focus:ring-indigo-400
+                 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400
                  ${
                                     isActive
                                         ? 'bg-indigo-100 dark:bg-indigo-800 text-indigo-700 dark:text-indigo-300 font-semibold'
                                         : 'hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-indigo-600 dark:hover:text-indigo-400'
                                 }`
                             }
-                            onClick={() => setSidebarOpen(false)} // close sidebar on mobile nav click
+                            onClick={() => setSidebarOpen(false)}
+                            tabIndex={0}
+                            style={{ outline: 'none', boxShadow: 'none' }}
                         >
                             <span className="text-xl">{icon}</span>
                             <span className="truncate">{label}</span>

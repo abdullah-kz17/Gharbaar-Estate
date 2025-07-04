@@ -11,16 +11,19 @@ import { FaCheckCircle, FaBan, FaStar } from "react-icons/fa";
 import { removePropertyFromPending } from "../../../store/slices/PropertySlice.js";
 import PropertyTable from "../../../components/admin/PropertyTable.jsx";
 import Loader from "../../../components/common/Loader.jsx"; // Adjust path as needed
+import Pagination from '../../../components/common/Pagination.jsx';
 
 const PendingApprovals = () => {
     const dispatch = useDispatch();
-    const { pendingProperties, loading, error } = useSelector(
+    const { pendingProperties, loading, error, pendingTotalPages } = useSelector(
         (state) => state.property
     );
+    const [currentPage, setCurrentPage] = React.useState(1);
+    const limit = 12;
 
     useEffect(() => {
-        dispatch(getPendingProperties());
-    }, [dispatch]);
+        dispatch(getPendingProperties({ page: currentPage, limit }));
+    }, [dispatch, currentPage]);
 
     const handleApprove = async (id) => {
         try {
@@ -108,6 +111,11 @@ const PendingApprovals = () => {
             </h2>
 
             <PropertyTable headers={headers} rows={rows} />
+            <Pagination
+                currentPage={currentPage}
+                totalPages={pendingTotalPages || 1}
+                onPageChange={page => setCurrentPage(page)}
+            />
         </div>
     );
 };

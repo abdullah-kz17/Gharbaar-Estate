@@ -32,6 +32,15 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+  body {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
 }
 
 h1 {

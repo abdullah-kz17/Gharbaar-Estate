@@ -11,6 +11,9 @@ const initialState = {
     singleBlog: null,
     loading: false,
     error: null,
+    total: 0,
+    page: 1,
+    totalPages: 1,
 };
 
 const blogSlice = createSlice({
@@ -36,7 +39,10 @@ const blogSlice = createSlice({
             .addCase(getAllBlogs.pending, state => { state.loading = true; })
             .addCase(getAllBlogs.fulfilled, (state, action) => {
                 state.loading = false;
-                state.blogs = action.payload;
+                state.blogs = action.payload.blogs;
+                state.total = action.payload.total;
+                state.page = action.payload.page;
+                state.totalPages = action.payload.totalPages;
             })
             .addCase(getAllBlogs.rejected, (state, action) => {
                 state.loading = false;

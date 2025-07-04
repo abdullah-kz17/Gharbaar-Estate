@@ -2,12 +2,19 @@ import React from "react";
 import { useAuth } from "../../context/AuthContext.jsx";
 import { Link } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
+import PageHeader from '../../components/common/PageHeader';
 
 export default function Profile() {
   const { user } = useAuth();
   const { username, email, profilePic, role, isAdmin } = user || {};
 
   return (
+    <>
+      <PageHeader
+        title="Your Profile"
+        subtitle="View and manage your personal information, preferences, and account settings."
+        backgroundImage="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=1500&q=80"
+      />
       <section className="min-h-screen bg-gradient-to-tr from-indigo-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center px-4 sm:px-6 lg:px-8 py-10 transition-colors duration-300">
         <div className="bg-white dark:bg-gray-900 rounded-3xl shadow-xl max-w-sm w-full p-8 sm:p-10 flex flex-col items-center text-center transition-all duration-300">
 
@@ -53,5 +60,6 @@ export default function Profile() {
           </Link>
         </div>
       </section>
+    </>
   );
 }

@@ -12,14 +12,17 @@ import { FaBan, FaCheck, FaStar, FaTrash } from "react-icons/fa";
 import { toast } from "react-toastify";
 import PropertyTable from "../../../components/admin/PropertyTable.jsx"
 import Loader from "../../../components/common/Loader.jsx";
+import Pagination from '../../../components/common/Pagination.jsx';
 
 const AdminProviderApprovalTable = () => {
     const dispatch = useDispatch();
-    const { providers, loading, error, success } = useSelector((state) => state.serviceProvider);
+    const { providers, loading, error, success, page, totalPages } = useSelector((state) => state.serviceProvider);
+    const [currentPage, setCurrentPage] = React.useState(1);
+    const limit = 12;
 
     useEffect(() => {
-        dispatch(adminGetAllProviders());
-    }, [dispatch]);
+        dispatch(adminGetAllProviders({ page: currentPage, limit }));
+    }, [dispatch, currentPage]);
 
     useEffect(() => {
         if (success) toast.success(success);
@@ -100,7 +103,14 @@ const AdminProviderApprovalTable = () => {
             ) : pendingProviders.length === 0 ? (
                 <div className="text-center py-10 text-lg text-gray-600">No pending providers.</div>
             ) : (
-                <PropertyTable headers={headers} rows={rows} />
+                <>
+                    <PropertyTable headers={headers} rows={rows} />
+                    <Pagination
+                        currentPage={currentPage}
+                        totalPages={totalPages || 1}
+                        onPageChange={page => setCurrentPage(page)}
+                    />
+                </>
             )}
         </div>
     );

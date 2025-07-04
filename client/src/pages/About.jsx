@@ -115,13 +115,6 @@ export default function About() {
         image: "/images/Ali.jpg",
         social: { linkedin: "#", twitter: "#", instagram: "#" },
     },
-    {
-        name: "Haseeb Asghar",
-        role: "Documentation & Research",
-        bio: "Haseeb compiled project documentation, researched real estate features, and contributed to writing detailed reports and presentations.",
-        image: "/images/Haseeb.jpg", // Make sure you update this image
-        social: { linkedin: "#", twitter: "#", instagram: "#" },
-    },
 ];
 
 

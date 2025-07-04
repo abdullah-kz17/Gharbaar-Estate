@@ -57,10 +57,12 @@ const AdminEditBlog = lazy(() => import("./pages/admin/dashboard-controls/AdminE
 import "./App.css";
 import ServiceProviderRequests from "./pages/serviceProvider/ServiceProviderRequests.jsx";
 import MyRequests from "./pages/user-dashboard/dashboard-controls/MyRequestedServices.jsx";
+import ScrollToTop from './components/common/ScrollToTop.jsx';
 
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <Header />
 
       <Suspense fallback={<Loader />}>

@@ -101,9 +101,10 @@ export const getReviewsForProvider = createAsyncThunk(
 // PUBLIC
 export const getAllApprovedProviders = createAsyncThunk(
     "serviceProvider/getApproved",
-    async (query = "", thunkAPI) => {
+    async ({ page = 1, limit = 12, ...filters } = {}, thunkAPI) => {
         try {
-            const res = await axiosPrivate.get(`/serviceProvider${query}`);
+            const params = new URLSearchParams({ page, limit, ...filters });
+            const res = await axiosPrivate.get(`/serviceProvider?${params.toString()}`);
             return res.data;
         } catch (err) {
             return thunkAPI.rejectWithValue(err.response?.data?.message || "Fetch failed");
@@ -128,10 +129,11 @@ export const getFeaturedProviders = createAsyncThunk(
 // Admin: Get all providers
 export const adminGetAllProviders = createAsyncThunk(
     "admin/getAllProviders",
-    async (_, thunkAPI) => {
+    async ({ page = 1, limit = 12, pending = false } = {}, thunkAPI) => {
         try {
-            const res = await axiosPrivate.get("/serviceProvider/admin/all");
-            return res.data.data;
+            const params = new URLSearchParams({ page, limit, pending });
+            const res = await axiosPrivate.get(`/serviceProvider/admin/all?${params.toString()}`);
+            return res.data;
         } catch (err) {
             return thunkAPI.rejectWithValue(err.response?.data?.message || "Fetch failed");
         }

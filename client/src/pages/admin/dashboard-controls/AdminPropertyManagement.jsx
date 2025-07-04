@@ -6,14 +6,17 @@ import PropertyTable from "../../../components/admin/PropertyTable.jsx";
 import Loader from "../../../components/common/Loader.jsx";
 import { toast } from "react-toastify";
 import {FaTrash} from "react-icons/fa";
+import Pagination from '../../../components/common/Pagination.jsx';
 
 const AdminPropertyManagement = () => {
     const dispatch = useDispatch();
-    const { properties, loading, error } = useSelector((state) => state.property);
+    const { properties, loading, error, page, totalPages } = useSelector((state) => state.property);
+    const [currentPage, setCurrentPage] = React.useState(1);
+    const limit = 12;
 
     useEffect(() => {
-        dispatch(getAllProperties());
-    }, [dispatch]);
+        dispatch(getAllProperties({ page: currentPage, limit }));
+    }, [dispatch, currentPage]);
 
     const handleDelete = async (id) => {
         if (!window.confirm("Are you sure you want to delete this property?")) return;
@@ -76,7 +79,14 @@ const AdminPropertyManagement = () => {
             ) : error ? (
                 <div className="text-red-500 text-center py-10">{error}</div>
             ) : (
-                <PropertyTable headers={headers} rows={rows} />
+                <>
+                    <PropertyTable headers={headers} rows={rows} />
+                    <Pagination
+                        currentPage={currentPage}
+                        totalPages={totalPages || 1}
+                        onPageChange={page => setCurrentPage(page)}
+                    />
+                </>
             )}
         </div>
     );

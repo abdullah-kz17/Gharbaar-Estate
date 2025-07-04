@@ -8,7 +8,6 @@ import store from './store/store.js';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {ThemeProvider} from "./context/ThemeContext.jsx";
-import theme from "tailwindcss/defaultTheme.js";
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

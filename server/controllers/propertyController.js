@@ -123,10 +123,28 @@ exports.createProperty = async (req, res) => {
 // Get all properties
 exports.getAllProperties = async (req, res) => {
     try {
-        const properties = await Property.find({ isApproved: true, isBanned: false })
-            .populate('realtorId', 'username email phone role')
-            .populate('createdBy', 'username email role');
-        res.status(200).json({ success: true, properties });
+        const page = parseInt(req.query.page) > 0 ? parseInt(req.query.page) : 1;
+        const limit = parseInt(req.query.limit) > 0 ? parseInt(req.query.limit) : 12;
+        const skip = (page - 1) * limit;
+        const filter = { isApproved: true, isBanned: false };
+
+        const [properties, total] = await Promise.all([
+            Property.find(filter)
+                .sort({ isFeatured: -1, createdAt: -1 })
+                .skip(skip)
+                .limit(limit)
+                .populate('realtorId', 'username email phone role')
+                .populate('createdBy', 'username email role'),
+            Property.countDocuments(filter)
+        ]);
+
+        res.status(200).json({
+            success: true,
+            properties,
+            total,
+            page,
+            totalPages: Math.ceil(total / limit)
+        });
     } catch (err) {
         res.status(500).json({
             success: false,
@@ -266,8 +284,24 @@ exports.deleteProperty = async (req, res) => {
 // Get properties of logged-in user
 exports.getUserProperties = async (req, res) => {
     try {
-        const properties = await Property.find({ createdBy: req.user._id });
-        res.status(200).json({ success: true, properties });
+        const page = parseInt(req.query.page) > 0 ? parseInt(req.query.page) : 1;
+        const limit = parseInt(req.query.limit) > 0 ? parseInt(req.query.limit) : 12;
+        const skip = (page - 1) * limit;
+        const filter = { createdBy: req.user._id };
+        const [properties, total] = await Promise.all([
+            Property.find(filter)
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(limit),
+            Property.countDocuments(filter)
+        ]);
+        res.status(200).json({
+            success: true,
+            properties,
+            total,
+            page,
+            totalPages: Math.ceil(total / limit)
+        });
     } catch (err) {
         res.status(500).json({ success: false, message: 'Failed to get user properties', error: err.message });
     }
@@ -325,14 +359,26 @@ exports.featureProperty = async (req, res) => {
 // Admin: Get all pending properties for approval
 exports.getPendingProperties = async (req, res) => {
     try {
-        const pendingProperties = await Property.find({ status: 'pending', isApproved: false })
-            .populate('realtorId', 'username email phone role')
-            .populate('createdBy', 'username email role');
-
+        const page = parseInt(req.query.page) > 0 ? parseInt(req.query.page) : 1;
+        const limit = parseInt(req.query.limit) > 0 ? parseInt(req.query.limit) : 12;
+        const skip = (page - 1) * limit;
+        const filter = { status: 'pending', isApproved: false };
+        const [properties, total] = await Promise.all([
+            Property.find(filter)
+                .populate('realtorId', 'username email phone role')
+                .populate('createdBy', 'username email role')
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(limit),
+            Property.countDocuments(filter)
+        ]);
         res.status(200).json({
             success: true,
             message: 'Pending properties fetched successfully.',
-            properties: pendingProperties
+            properties,
+            total,
+            page,
+            totalPages: Math.ceil(total / limit)
         });
     } catch (err) {
         res.status(500).json({
