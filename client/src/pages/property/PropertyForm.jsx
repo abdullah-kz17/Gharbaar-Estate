@@ -217,12 +217,12 @@ const PropertyForm = () => {
     };
 
     return (
-        <div className="max-w-4xl mx-auto p-8 bg-white shadow-2xl rounded-2xl border border-indigo-100 mt-8 animate-fade-in">
-            <h2 className="text-3xl font-extrabold text-center mb-8 text-indigo-800 tracking-tight">Create New Property</h2>
+        <div className="max-w-4xl mx-auto p-8 bg-white dark:bg-gray-900 shadow-2xl rounded-2xl border border-indigo-100 dark:border-gray-800 mt-8 mb-12 animate-fade-in">
+            <h2 className="text-3xl font-extrabold text-center mb-8 text-indigo-800 dark:text-indigo-200 tracking-tight">Create New Property</h2>
             <form onSubmit={handleSubmit} className="space-y-10">
                 {/* Basic Info */}
                 <section>
-                    <h3 className="text-xl font-bold mb-4 text-indigo-700">Basic Information</h3>
+                    <h3 className="text-xl font-bold mb-4 text-indigo-700 dark:text-indigo-300">Basic Information</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <Input name="name" value={formData.name} onChange={handleChange} label={<><FaRulerCombined className="inline mr-2 text-indigo-400" />Property Name *</>} error={formErrors.name} />
                         <Input name="price" value={formData.price} type="number" onChange={handleChange} label={<><FaDollarSign className="inline mr-2 text-green-400" />Price (PKR) *</>} error={formErrors.price} />
@@ -239,12 +239,12 @@ const PropertyForm = () => {
                 </section>
                 {/* Description */}
                 <section>
-                    <h3 className="text-xl font-bold mb-4 text-indigo-700">Description</h3>
+                    <h3 className="text-xl font-bold mb-4 text-indigo-700 dark:text-indigo-300">Description</h3>
                     <TextArea name="description" value={formData.description} onChange={handleChange} label="Description *" error={formErrors.description} />
                 </section>
                 {/* Features & Amenities */}
                 <section>
-                    <h3 className="text-xl font-bold mb-4 text-indigo-700">Features & Amenities</h3>
+                    <h3 className="text-xl font-bold mb-4 text-indigo-700 dark:text-indigo-300">Features & Amenities</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <TagInput label="Features" tags={features} setTags={setFeatures} placeholder="Press Enter to add feature (e.g., Garage, Garden, Pool)" />
                         <TagInput label="Amenities" tags={amenities} setTags={setAmenities} placeholder="Press Enter to add amenity (e.g., Gas, Water Supply, Sewerage)" />
@@ -252,7 +252,7 @@ const PropertyForm = () => {
                 </section>
                 {/* Rooms */}
                 <section>
-                    <h3 className="text-xl font-bold mb-4 text-indigo-700">Rooms</h3>
+                    <h3 className="text-xl font-bold mb-4 text-indigo-700 dark:text-indigo-300">Rooms</h3>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <Input name="beds" type="number" value={formData.beds} onChange={handleChange} label={<><FaBed className="inline mr-2 text-purple-400" />Beds *</>} error={formErrors.beds} />
                         <Input name="baths" type="number" value={formData.baths} onChange={handleChange} label={<><FaBath className="inline mr-2 text-pink-400" />Baths *</>} error={formErrors.baths} />
@@ -261,7 +261,7 @@ const PropertyForm = () => {
                 </section>
                 {/* Renovation */}
                 <section>
-                    <h3 className="text-xl font-bold mb-4 text-indigo-700">Renovation</h3>
+                    <h3 className="text-xl font-bold mb-4 text-indigo-700 dark:text-indigo-300">Renovation</h3>
                     <div className="flex items-center space-x-2 mb-2">
                         <input type="checkbox" name="renovationRequired" checked={formData.renovationRequired} onChange={handleChange} />
                         <label>Renovation Required</label>
@@ -272,7 +272,7 @@ const PropertyForm = () => {
                 </section>
                 {/* Contact Info */}
                 <section>
-                    <h3 className="text-xl font-bold mb-4 text-indigo-700">Contact Information</h3>
+                    <h3 className="text-xl font-bold mb-4 text-indigo-700 dark:text-indigo-300">Contact Information</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <Input name="phone" value={formData.phone} onChange={handleChange} label={<><FaPhone className="inline mr-2 text-green-400" />Phone</>} />
                         <Input name="email" type="email" value={formData.email} onChange={handleChange} label={<><FaEnvelope className="inline mr-2 text-blue-400" />Email</>} error={formErrors.email} />
@@ -280,8 +280,8 @@ const PropertyForm = () => {
                 </section>
                 {/* Image Upload */}
                 <section>
-                    <h3 className="text-xl font-bold mb-4 text-indigo-700">Images</h3>
-                    <div className={`border-2 border-dashed p-6 text-center rounded-md cursor-pointer bg-gray-50 hover:bg-gray-100 transition relative ${formErrors.images ? 'border-red-400' : 'border-indigo-200'}`}
+                    <h3 className="text-xl font-bold mb-4 text-indigo-700 dark:text-indigo-300">Images</h3>
+                    <div className={`border-2 border-dashed p-6 text-center rounded-md cursor-pointer bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition relative ${formErrors.images ? 'border-red-400 dark:border-red-400' : 'border-indigo-200 dark:border-gray-700'}`}
                         onDragOver={e => { e.preventDefault(); e.currentTarget.classList.add('ring-2', 'ring-indigo-400'); }}
                         onDragLeave={e => { e.preventDefault(); e.currentTarget.classList.remove('ring-2', 'ring-indigo-400'); }}
                         onDrop={e => {
@@ -302,7 +302,7 @@ const PropertyForm = () => {
                     <div className="flex gap-3 flex-wrap mt-4">
                         {imagePreview.map((url, idx) => (
                             <div key={idx} className="relative group">
-                                <img src={url} alt={`preview-${idx}`} className="w-24 h-24 object-cover rounded-lg border-2 border-indigo-200 shadow" />
+                                <img src={url} alt={`preview-${idx}`} className="w-24 h-24 object-cover rounded-lg border-2 border-indigo-200 dark:border-gray-700 shadow" />
                                 <button type="button" onClick={() => {
                                     const newImgs = [...images];
                                     newImgs.splice(idx, 1);
@@ -324,7 +324,7 @@ const PropertyForm = () => {
                     <button
                         type="submit"
                         disabled={isSubmitting}
-                        className={`w-full py-3 px-6 text-white text-lg font-bold rounded-xl shadow-lg transition-all duration-200 ${isSubmitting ? 'bg-gray-400' : 'bg-indigo-600 hover:bg-indigo-700'}`}
+                        className={`w-full py-3 px-6 text-white text-lg font-bold rounded-xl shadow-lg transition-all duration-200 ${isSubmitting ? 'bg-gray-400 dark:bg-gray-700' : 'bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-700 dark:hover:bg-indigo-800'}`}
                     >
                         {isSubmitting ? "Submitting..." : "Submit Property"}
                     </button>
@@ -409,41 +409,41 @@ const PropertyForm = () => {
 
 // Enhanced Input with floating label, error, and icon support
 const Input = ({ name, label, value, onChange, type = "text", error }) => (
-    <label className="relative flex flex-col gap-1 text-base font-medium text-gray-700">
+    <label className="relative flex flex-col gap-1 text-base font-medium text-gray-700 dark:text-gray-200">
         <span className="mb-1">{label}</span>
         <input
             name={name}
             value={value}
             type={type}
             onChange={onChange}
-            className={`border-2 px-4 py-2 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:border-indigo-400 ${error ? 'border-red-400' : 'border-indigo-200'}`}
+            className={`border-2 px-4 py-2 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:border-indigo-400 dark:bg-gray-900 dark:border-gray-700 dark:focus:border-indigo-500 ${error ? 'border-red-400 dark:border-red-400' : 'border-indigo-200 dark:border-gray-700'}`}
         />
         {error && <span className="text-red-600 text-xs mt-1">{error}</span>}
     </label>
 );
 
 const TextArea = ({ name, label, value, onChange, error }) => (
-    <label className="relative flex flex-col gap-1 text-base font-medium text-gray-700">
+    <label className="relative flex flex-col gap-1 text-base font-medium text-gray-700 dark:text-gray-200">
         <span className="mb-1">{label}</span>
         <textarea
             name={name}
             value={value}
             onChange={onChange}
             rows={4}
-            className={`border-2 px-4 py-2 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:border-indigo-400 ${error ? 'border-red-400' : 'border-indigo-200'}`}
+            className={`border-2 px-4 py-2 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:border-indigo-400 dark:bg-gray-900 dark:border-gray-700 dark:focus:border-indigo-500 ${error ? 'border-red-400 dark:border-red-400' : 'border-indigo-200 dark:border-gray-700'}`}
         />
         {error && <span className="text-red-600 text-xs mt-1">{error}</span>}
     </label>
 );
 
 const Select = ({ name, label, value, onChange, children }) => (
-    <label className="relative flex flex-col gap-1 text-base font-medium text-gray-700">
+    <label className="relative flex flex-col gap-1 text-base font-medium text-gray-700 dark:text-gray-200">
         <span className="mb-1">{label}</span>
         <select
             name={name}
             value={value}
             onChange={onChange}
-            className="border-2 px-4 py-2 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:border-indigo-400 border-indigo-200"
+            className="border-2 px-4 py-2 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:border-indigo-400 border-indigo-200 dark:bg-gray-900 dark:border-gray-700 dark:focus:border-indigo-500"
         >
             {children}
         </select>
@@ -466,18 +466,18 @@ const TagInput = ({ label, tags, setTags, placeholder }) => {
         setTags(tags.filter((tag) => tag !== tagToRemove));
     };
     return (
-        <div className="flex flex-col gap-1 text-base font-medium text-gray-700">
+        <div className="flex flex-col gap-1 text-base font-medium text-gray-700 dark:text-gray-200">
             <span className="mb-1">{label}</span>
-            <div className="flex flex-wrap gap-2 border-2 border-indigo-200 px-4 py-2 rounded-lg bg-white">
+            <div className="flex flex-wrap gap-2 border-2 border-indigo-200 dark:border-gray-700 px-4 py-2 rounded-lg bg-white dark:bg-gray-900">
                 {tags.map((tag, idx) => (
-                    <span key={idx} className="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full flex items-center gap-1 text-xs animate-fade-in">
+                    <span key={idx} className="bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 px-3 py-1 rounded-full flex items-center gap-1 text-xs animate-fade-in">
                         {tag}
                         <button type="button" onClick={() => handleRemove(tag)} className="text-red-500 hover:text-red-700 ml-1"><FaTimes size={12} /></button>
                     </span>
                 ))}
                 <input
                     type="text"
-                    className="flex-1 outline-none min-w-[100px]"
+                    className="flex-1 outline-none min-w-[100px] bg-transparent dark:text-gray-100"
                     placeholder={placeholder}
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
