@@ -61,8 +61,8 @@ const UserDashboard = () => {
 
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
-            <div className="max-w-7xl mx-auto">
-                <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-10">
+            <div className="max-w-7xl mx-auto rounded-lg">
+                <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-10 rounded-lg">
                     Welcome to Your Dashboard
                 </h1>
 
