@@ -217,11 +217,11 @@ const PropertyForm = () => {
     };
 
     return (
-        <div className="max-w-4xl mx-auto p-8 bg-white dark:bg-gray-900 shadow-2xl rounded-2xl border border-indigo-100 dark:border-gray-800 mt-8 mb-12 animate-fade-in">
+        <div className="max-w-4xl mx-auto p-8 bg-white dark:bg-gray-950 shadow-2xl rounded-2xl border border-indigo-100 dark:border-gray-800 mt-8 mb-12 animate-fade-in">
             <h2 className="text-3xl font-extrabold text-center mb-8 text-indigo-800 dark:text-indigo-200 tracking-tight">Create New Property</h2>
             <form onSubmit={handleSubmit} className="space-y-10">
                 {/* Basic Info */}
-                <section>
+                <section className="bg-white dark:bg-gray-900 rounded-xl p-6 mb-4 shadow-sm border border-gray-100 dark:border-gray-800">
                     <h3 className="text-xl font-bold mb-4 text-indigo-700 dark:text-indigo-300">Basic Information</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <Input name="name" value={formData.name} onChange={handleChange} label={<><FaRulerCombined className="inline mr-2 text-indigo-400" />Property Name *</>} error={formErrors.name} />
@@ -238,12 +238,12 @@ const PropertyForm = () => {
                     </div>
                 </section>
                 {/* Description */}
-                <section>
+                <section className="bg-white dark:bg-gray-900 rounded-xl p-6 mb-4 shadow-sm border border-gray-100 dark:border-gray-800">
                     <h3 className="text-xl font-bold mb-4 text-indigo-700 dark:text-indigo-300">Description</h3>
                     <TextArea name="description" value={formData.description} onChange={handleChange} label="Description *" error={formErrors.description} />
                 </section>
                 {/* Features & Amenities */}
-                <section>
+                <section className="bg-white dark:bg-gray-900 rounded-xl p-6 mb-4 shadow-sm border border-gray-100 dark:border-gray-800">
                     <h3 className="text-xl font-bold mb-4 text-indigo-700 dark:text-indigo-300">Features & Amenities</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <TagInput label="Features" tags={features} setTags={setFeatures} placeholder="Press Enter to add feature (e.g., Garage, Garden, Pool)" />
@@ -251,7 +251,7 @@ const PropertyForm = () => {
                     </div>
                 </section>
                 {/* Rooms */}
-                <section>
+                <section className="bg-white dark:bg-gray-900 rounded-xl p-6 mb-4 shadow-sm border border-gray-100 dark:border-gray-800">
                     <h3 className="text-xl font-bold mb-4 text-indigo-700 dark:text-indigo-300">Rooms</h3>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <Input name="beds" type="number" value={formData.beds} onChange={handleChange} label={<><FaBed className="inline mr-2 text-purple-400" />Beds *</>} error={formErrors.beds} />
@@ -260,7 +260,7 @@ const PropertyForm = () => {
                     </div>
                 </section>
                 {/* Renovation */}
-                <section>
+                <section className="bg-white dark:bg-gray-900 rounded-xl p-6 mb-4 shadow-sm border border-gray-100 dark:border-gray-800">
                     <h3 className="text-xl font-bold mb-4 text-indigo-700 dark:text-indigo-300">Renovation</h3>
                     <div className="flex items-center space-x-2 mb-2">
                         <input type="checkbox" name="renovationRequired" checked={formData.renovationRequired} onChange={handleChange} />
@@ -271,7 +271,7 @@ const PropertyForm = () => {
                     )}
                 </section>
                 {/* Contact Info */}
-                <section>
+                <section className="bg-white dark:bg-gray-900 rounded-xl p-6 mb-4 shadow-sm border border-gray-100 dark:border-gray-800">
                     <h3 className="text-xl font-bold mb-4 text-indigo-700 dark:text-indigo-300">Contact Information</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <Input name="phone" value={formData.phone} onChange={handleChange} label={<><FaPhone className="inline mr-2 text-green-400" />Phone</>} />
@@ -279,7 +279,7 @@ const PropertyForm = () => {
                     </div>
                 </section>
                 {/* Image Upload */}
-                <section>
+                <section className="bg-white dark:bg-gray-900 rounded-xl p-6 mb-4 shadow-sm border border-gray-100 dark:border-gray-800">
                     <h3 className="text-xl font-bold mb-4 text-indigo-700 dark:text-indigo-300">Images</h3>
                     <div className={`border-2 border-dashed p-6 text-center rounded-md cursor-pointer bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition relative ${formErrors.images ? 'border-red-400 dark:border-red-400' : 'border-indigo-200 dark:border-gray-700'}`}
                         onDragOver={e => { e.preventDefault(); e.currentTarget.classList.add('ring-2', 'ring-indigo-400'); }}
