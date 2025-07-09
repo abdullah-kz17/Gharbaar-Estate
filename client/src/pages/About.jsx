@@ -84,7 +84,7 @@ export default function About() {
         name: "Abdullah Khan",
         role: "Frontend Developer & Lead",
         bio: "Abdullah worked on building interactive UI components using React and implemented user-friendly navigation across the platform.",
-        image: "/images/Abdullah.jpeg",
+        image: "/images/Abdullah.png",
         social: { linkedin: "#", twitter: "#", instagram: "#" },
     },
     {
