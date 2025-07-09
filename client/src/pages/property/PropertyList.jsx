@@ -7,6 +7,7 @@ import Loader from "../../components/common/Loader.jsx";
 import { getUserFavorites } from "../../store/thunks/FavouriteThunk.js";
 import Pagination from '../../components/common/Pagination.jsx';
 import PageHeader from '../../components/common/PageHeader';
+import { FaSearch } from "react-icons/fa";
 
 const examplePrompts = [
     "3 bedroom house in Lahore under 1 crore",
@@ -150,7 +151,7 @@ const PropertyList = () => {
                             autoComplete="off"
                         />
                         <span className="absolute right-5 top-1/2 -translate-y-1/2 text-indigo-600 dark:text-indigo-400 font-semibold select-none pointer-events-none">
-                            🔍
+                            <FaSearch />
                         </span>
                     </div>
 
