@@ -153,7 +153,6 @@ const PropertyForm = () => {
         try {
             // ✅ Submit to backend
             const res = await dispatch(createProperty({ formData: data })).unwrap();
-            console.log("✅ Property created successfully!", res);
             toast.success("Property created successfully!");
 
             // ✅ Run AI prediction for each image

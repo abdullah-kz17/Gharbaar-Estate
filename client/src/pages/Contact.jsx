@@ -109,12 +109,13 @@ export default function ContactPage() {
                                 {
                                     icon: <FaPhoneAlt className="text-indigo-600 dark:text-indigo-400" />,
                                     title: 'Phone',
-                                    value: '+92 3460219660',
+                                    value: '+92 346-0219660',
                                 },
                                 {
                                     icon: <FaEnvelope className="text-indigo-600 dark:text-indigo-400" />,
                                     title: 'Email',
-                                    value: 'abdxllah.khan@gmail.com',
+                                    value: 'info@gharbaarestate.com',
+
                                 },
                                 {
                                     icon: <FaClock className="text-indigo-600 dark:text-indigo-400" />,

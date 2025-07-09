@@ -37,12 +37,12 @@ export default function Contact({ isVisible = true }) {
                                 {
                                     icon: <FaPhoneAlt className="text-indigo-700 dark:text-indigo-400" />,
                                     title: "Phone",
-                                    detail: "(555) 123-4567",
+                                    detail: "+92 346-0219660",
                                 },
                                 {
                                     icon: <FaEnvelope className="text-indigo-700 dark:text-indigo-400" />,
                                     title: "Email",
-                                    detail: "support@homecompanion.com",
+                                    detail: "info@gharbaarestate.com",
                                 },
                                 {
                                     icon: <FaClock className="text-indigo-700 dark:text-indigo-400" />,
