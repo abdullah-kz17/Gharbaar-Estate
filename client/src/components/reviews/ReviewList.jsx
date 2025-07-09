@@ -17,7 +17,7 @@ const ReviewList = ({ providerId }) => {
             try {
                 await dispatch(deleteReview({ providerId, reviewId })).unwrap();
                 toast.success("Review deleted successfully");
-            } catch (error) {
+            } catch {
                 toast.error("Failed to delete review");
             }
         }
@@ -120,4 +120,4 @@ const ReviewList = ({ providerId }) => {
     );
 };
 
-export default ReviewList;
+export default React.memo(ReviewList);

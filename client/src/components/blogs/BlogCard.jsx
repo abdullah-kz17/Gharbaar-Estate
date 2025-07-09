@@ -130,4 +130,4 @@ const BlogCard = ({ blog }) => {
   );
 };
 
-export default BlogCard;
+export default React.memo(BlogCard);

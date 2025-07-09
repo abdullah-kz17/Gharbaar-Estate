@@ -295,4 +295,4 @@ const ServiceProviderDetailCard = ({ provider }) => {
     );
 };
 
-export default ServiceProviderDetailCard
+export default React.memo(ServiceProviderDetailCard);

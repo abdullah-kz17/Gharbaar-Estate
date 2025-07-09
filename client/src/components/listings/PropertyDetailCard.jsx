@@ -281,4 +281,4 @@ const PropertyDetailCard = ({ property }) => {
     );
 };
 
-export default PropertyDetailCard
+export default React.memo(PropertyDetailCard);

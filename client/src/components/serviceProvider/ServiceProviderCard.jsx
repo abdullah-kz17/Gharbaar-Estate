@@ -134,4 +134,4 @@ const ServiceProviderCard = ({
   );
 };
 
-export default ServiceProviderCard;
+export default React.memo(ServiceProviderCard);

@@ -220,4 +220,4 @@ const PropertyCard = ({ property, isFavorited: propIsFavorited, onToggleFavorite
     );
 };
 
-export default PropertyCard;
+export default React.memo(PropertyCard);
