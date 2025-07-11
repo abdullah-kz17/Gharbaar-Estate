@@ -40,7 +40,7 @@ const ProviderRequestsPage = () => {
     };
 
     if (loading) return <Loader />;
-    if (!providerRequests.length) return <p>No requests found.</p>;
+    if (!providerRequests.length) return <p className="text-center text-gray-500 text-xl font-bold my-10">No requests found.</p>;
 
     return (
         <div className="p-6 max-w-4xl mx-auto">

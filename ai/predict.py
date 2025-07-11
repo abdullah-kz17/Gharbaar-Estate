@@ -35,6 +35,7 @@ try:
     model.fc = nn.Linear(model.fc.in_features, 2)
     model.load_state_dict(torch.load("renovation_model.pt", map_location=device))
     model.to(device).eval()
+    print("✅ Model loaded successfully on", device)
 except Exception as e:
     print("❌ Model loading failed:", traceback.format_exc())
     raise RuntimeError("Model could not be loaded.")
@@ -102,6 +103,16 @@ def grad_cam(image, model, class_idx=None):
         fwd.remove()
         bwd.remove()
 
+# Health check endpoint
+@app.route('/health', methods=['GET'])
+def health_check():
+    return jsonify({
+        "status": "healthy",
+        "model_loaded": model is not None,
+        "device": str(device),
+        "cloudinary_configured": bool(os.getenv("CLOUDINARY_CLOUD_NAME"))
+    })
+
 # Prediction route
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -131,4 +142,13 @@ def predict():
         }), 500
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5001, debug=True)
+    # Get configuration from environment variables
+    host = os.getenv('FLASK_HOST', '0.0.0.0')
+    port = int(os.getenv('FLASK_PORT', 5001))
+    debug = os.getenv('FLASK_DEBUG', 'False').lower() == 'true'
+    
+    print(f"🚀 Starting Flask AI server on {host}:{port}")
+    print(f"🔧 Debug mode: {debug}")
+    print(f"💻 Device: {device}")
+    
+    app.run(host=host, port=port, debug=debug)

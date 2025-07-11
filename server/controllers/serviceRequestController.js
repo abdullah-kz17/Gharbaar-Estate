@@ -11,6 +11,16 @@ exports.createRequest = async (req, res) => {
         const provider = await ServiceProvider.findById(providerId).populate("user", "email username");
         if (!provider) return res.status(404).json({ message: "Service provider not found" });
 
+        // Prevent duplicate pending requests
+        const existing = await Request.findOne({
+            user: req.user._id,
+            provider: provider._id,
+            status: 'pending'
+        });
+        if (existing) {
+            return res.status(400).json({ message: "You already have a pending request to this provider." });
+        }
+
         const newRequest = await Request.create({
             user: req.user._id,
             provider: provider._id,

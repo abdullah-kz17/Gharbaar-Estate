@@ -11,7 +11,7 @@ import Pagination from '../../../components/common/Pagination.jsx';
 const UserPropertyManagement = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { userProperties, loading, page, totalPages } = useSelector((state) => state.property);
+    const { userProperties, loading, userPage, userTotalPages } = useSelector((state) => state.property);
     const [currentPage, setCurrentPage] = useState(1);
     const limit = 12;
 
@@ -24,7 +24,7 @@ const UserPropertyManagement = () => {
             dispatch(deleteProperty(id))
                 .unwrap()
                 .then(() => {
-                    dispatch(getUserProperties());
+                    dispatch(getUserProperties({ page: currentPage, limit }));
                     toast.success("Property deleted successfully");
                 })
                 .catch(() => {
@@ -91,8 +91,8 @@ const UserPropertyManagement = () => {
                 <>
                     <PropertyTable headers={headers} rows={rows} />
                     <Pagination
-                        currentPage={page}
-                        totalPages={totalPages || 1}
+                        currentPage={userPage}
+                        totalPages={userTotalPages || 1}
                         onPageChange={setCurrentPage}
                     />
                 </>

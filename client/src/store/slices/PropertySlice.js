@@ -32,6 +32,10 @@ const initialState = {
     pendingPage: 1,
     pendingTotalPages: 1,
     pendingTotal: 0,
+    // Add pagination for user properties
+    userPage: 1,
+    userTotalPages: 1,
+    userTotal: 0,
 };
 
 const propertySlice = createSlice({
@@ -56,6 +60,9 @@ const propertySlice = createSlice({
             state.pendingPage = 1;
             state.pendingTotalPages = 1;
             state.pendingTotal = 0;
+            state.userPage = 1;
+            state.userTotalPages = 1;
+            state.userTotal = 0;
         },
 
         removePropertyFromPending: (state, action) => {
@@ -88,6 +95,9 @@ const propertySlice = createSlice({
             .addCase(getUserProperties.fulfilled, (state, { payload }) => {
                 state.loading = false;
                 state.userProperties = payload.properties;
+                state.userPage = payload.page || 1;
+                state.userTotalPages = payload.totalPages || 1;
+                state.userTotal = payload.total || 0;
                 state.success = true;
             })
 

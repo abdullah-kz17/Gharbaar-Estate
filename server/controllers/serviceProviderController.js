@@ -322,7 +322,7 @@ exports.reviewServiceProvider = async (req, res) => {
         }
 
         // Check if user already submitted a review
-        const existingReviewIndex = provider.reviews.findIndex(r => r.user._id.toString() === userId.toString());
+        const existingReviewIndex = provider.reviews.findIndex(r => r.user && r.user._id && r.user._id.toString() === userId.toString());
 
         if (existingReviewIndex !== -1) {
             // Update existing review
@@ -346,7 +346,8 @@ exports.reviewServiceProvider = async (req, res) => {
 
         const updatedProvider = await ServiceProvider.findById(providerId).populate("reviews.user", "username email profilePic");
 
-        const finalReview = updatedProvider.reviews.find(r => r.user._id.toString() === userId.toString());
+        // Defensive: find the review just submitted/updated
+        const finalReview = updatedProvider.reviews.find(r => r.user && r.user._id && r.user._id.toString() === userId.toString());
 
         res.status(200).json({
             message: existingReviewIndex !== -1 ? "Review updated" : "Review submitted",
@@ -384,10 +385,13 @@ exports.deleteReview = async (req, res) => {
         provider.calculateAverageRating();
         await provider.save();
 
+        // Re-fetch with populated user info
+        const updatedProvider = await ServiceProvider.findById(id).populate("reviews.user", "username email profilePic");
+
         res.status(200).json({
             message: "Review deleted",
-            reviews: provider.reviews,
-            averageRating: provider.averageRating
+            reviews: updatedProvider.reviews,
+            averageRating: updatedProvider.averageRating
         });
 
     } catch (error) {
