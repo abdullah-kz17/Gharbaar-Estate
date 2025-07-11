@@ -82,36 +82,38 @@ const Header = () => {
                         )}
                     </div>
 
-                    {/* Auth Buttons */}
-                    {isLoggedIn ? (
-                        <div className="flex items-center space-x-4">
-                            {!isAdmin && (
-                                <Link
-                                    to="/add-property"
-                                    className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-90 text-white flex items-center gap-2 px-4 py-2 rounded-md transition"
+                    {/* Auth Buttons + ThemeToggle always visible */}
+                    <div className="flex items-center space-x-4">
+                        {isLoggedIn ? (
+                            <>
+                                {!isAdmin && (
+                                    <Link
+                                        to="/add-property"
+                                        className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-90 text-white flex items-center gap-2 px-4 py-2 rounded-md transition"
+                                    >
+                                        <FaPlusCircle />
+                                        <span>Add Property</span>
+                                    </Link>
+                                )}
+                                <button
+                                    onClick={logout}
+                                    className="flex items-center gap-2 text-gray-700 dark:text-white hover:text-red-600 transition"
                                 >
-                                    <FaPlusCircle />
-                                    <span>Add Property</span>
+                                    <FaSignOutAlt />
+                                    <span>Logout</span>
+                                </button>
+                            </>
+                        ) : (
+                            <>
+                                <NavItem to="/login" label="Login" icon={<FaSignInAlt />} />
+                                <Link to="/register" className="btn-primary flex items-center gap-2 dark:text-white">
+                                    <FaUserPlus />
+                                    <span>Register</span>
                                 </Link>
-                            )}
-                            <button
-                                onClick={logout}
-                                className="flex items-center gap-2 text-gray-700 dark:text-white hover:text-red-600 transition"
-                            >
-                                <FaSignOutAlt />
-                                <span>Logout</span>
-                            </button>
-                            <ThemeToggle />
-                        </div>
-                    ) : (
-                        <div className="flex items-center space-x-4">
-                            <NavItem to="/login" label="Login" icon={<FaSignInAlt />} />
-                            <Link to="/register" className="btn-primary flex items-center gap-2">
-                                <FaUserPlus />
-                                <span>Register</span>
-                            </Link>
-                        </div>
-                    )}
+                            </>
+                        )}
+                        <ThemeToggle />
+                    </div>
                 </nav>
 
                 {/* Mobile Toggle */}
@@ -156,7 +158,7 @@ const Header = () => {
                     {!isLoggedIn && (
                         <>
                             <MobileLink to="/login" label="Login" icon={<FaSignInAlt />} />
-                            <Link to="/register" className="btn-primary flex items-center justify-center gap-2 w-full">
+                            <Link to="/register" className="btn-primary flex items-center justify-center gap-2 w-full dark:text-white">
                                 <FaUserPlus />
                                 Register
                             </Link>

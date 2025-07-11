@@ -13,7 +13,6 @@ export default function Login() {
   const [resending, setResending] = useState(false);
   const { storeTokenInLS } = useAuth();
   const navigate = useNavigate();
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -66,14 +65,14 @@ export default function Login() {
   };
 
   return (
-      <div className="min-h-screen flex items-center justify-center bg-white px-4 ">
-        <div className="bg-white shadow-2xl rounded-2xl max-w-md w-full p-8 md:p-10">
-          <h2 className="text-3xl font-bold text-center text-indigo-600 mb-6">Login to Your Account</h2>
+      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900 px-4 ">
+        <div className="bg-white dark:bg-gray-800 shadow-2xl rounded-2xl max-w-md w-full p-8 md:p-10 dark:text-gray-100">
+          <h2 className="text-3xl font-bold text-center text-indigo-600 dark:text-indigo-300 mb-6">Login to Your Account</h2>
 
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Email Input */}
             <div>
-              <label htmlFor="email" className="block text-gray-700 font-semibold mb-1">
+              <label htmlFor="email" className="block text-gray-700 dark:text-gray-200 font-semibold mb-1">
                 Email
               </label>
               <input
@@ -83,14 +82,14 @@ export default function Login() {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-900 dark:text-gray-100 transition-all"
                   placeholder="Enter your email"
               />
             </div>
 
             {/* Password Input */}
             <div>
-              <label htmlFor="password" className="block text-gray-700 font-semibold mb-1">
+              <label htmlFor="password" className="block text-gray-700 dark:text-gray-200 font-semibold mb-1">
                 Password
               </label>
               <div className="relative">
@@ -101,19 +100,19 @@ export default function Login() {
                     value={formData.password}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg pr-10 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg pr-10 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-900 dark:text-gray-100 transition-all"
                     placeholder="Enter your password"
                 />
                 <button
                     type="button"
                     onClick={() => setShowPassword(prev => !prev)}
-                    className="absolute inset-y-0 right-3 flex items-center text-gray-500"
+                    className="absolute inset-y-0 right-3 flex items-center text-gray-500 dark:text-gray-300"
                 >
                   {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>
               </div>
               <div className="text-right mt-1">
-                <Link to="/forgot-password" className="text-sm text-indigo-500 hover:underline">
+                <Link to="/forgot-password" className="text-sm text-indigo-500 dark:text-indigo-300 hover:underline">
                   Forgot Password?
                 </Link>
               </div>
@@ -121,11 +120,11 @@ export default function Login() {
 
             {/* Unverified Email Notice */}
             {unverifiedEmail && (
-                <div className="bg-yellow-100 border border-yellow-400 text-yellow-800 p-3 rounded text-sm">
+                <div className="bg-yellow-100 dark:bg-yellow-900 border border-yellow-400 dark:border-yellow-700 text-yellow-800 dark:text-yellow-200 p-3 rounded text-sm">
                   Your email is not verified.{' '}
                   <button
                       onClick={handleResendVerification}
-                      className="text-indigo-600 font-medium hover:underline"
+                      className="text-indigo-600 dark:text-indigo-300 font-medium hover:underline"
                       disabled={resending}
                   >
                     {resending ? 'Sending...' : 'Click here to verify.'}
@@ -146,9 +145,9 @@ export default function Login() {
           </form>
 
           {/* Register Link */}
-          <p className="mt-6 text-center text-sm text-gray-600">
+          <p className="mt-6 text-center text-sm text-gray-600 dark:text-gray-300">
             Don’t have an account?{' '}
-            <Link to="/register" className="text-indigo-600 hover:underline font-medium">
+            <Link to="/register" className="text-indigo-600 dark:text-indigo-300 hover:underline font-medium">
               Register here
             </Link>
           </p>

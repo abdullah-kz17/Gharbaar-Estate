@@ -48,9 +48,9 @@ export default function VerifyEmail() {
     }, [token, email, navigate]);
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4">
+        <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 px-4">
             <div className="text-center">
-                <h2 className="text-xl font-semibold text-gray-700">
+                <h2 className="text-xl font-semibold text-gray-700 dark:text-gray-100">
                     {verifying ? 'Verifying your email...' : 'Redirecting...'}
                 </h2>
             </div>

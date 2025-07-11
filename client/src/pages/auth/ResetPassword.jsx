@@ -41,7 +41,7 @@ export default function ResetPassword() {
   };
 
   return (
-      <div className="min-h-screen flex items-center justify-center px-4 bg-white transition-colors">
+      <div className="min-h-screen flex items-center justify-center px-4 bg-white dark:bg-gray-900 transition-colors">
         <div className="w-full max-w-md bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 shadow-2xl rounded-xl p-8">
           <h2 className="text-3xl font-bold text-center text-indigo-600 dark:text-white mb-2">
             Reset Your Password
@@ -53,7 +53,7 @@ export default function ResetPassword() {
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* New Password */}
             <div className="relative">
-              <label htmlFor="password" className="block text-sm font-medium mb-1">
+              <label htmlFor="password" className="block text-sm font-medium mb-1 dark:text-gray-200">
                 New Password
               </label>
               <input
@@ -78,7 +78,7 @@ export default function ResetPassword() {
 
             {/* Confirm Password */}
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium mb-1">
+              <label htmlFor="confirmPassword" className="block text-sm font-medium mb-1 dark:text-gray-200">
                 Confirm Password
               </label>
               <input

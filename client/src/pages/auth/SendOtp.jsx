@@ -33,13 +33,13 @@
 //     };
 
 //     return (
-//         <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4">
-//             <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
+//         <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 px-4">
+//             <div className="w-full max-w-md bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md dark:text-gray-100">
 //                 <h2 className="text-2xl font-bold text-center mb-6">Send OTP to Your Phone</h2>
 
 //                 <form onSubmit={handleSendOtp} className="space-y-4">
 //                     <div>
-//                         <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+//                         <label htmlFor="phone" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
 //                             Phone Number
 //                         </label>
 //                         <input
@@ -49,7 +49,7 @@
 //                             onChange={(e) => setPhone(e.target.value)}
 //                             placeholder="e.g. 1234567890"
 //                             required
-//                             className="mt-1 w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-400"
+//                             className="mt-1 w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-400 dark:bg-gray-900 dark:text-gray-100 dark:border-gray-600"
 //                         />
 //                     </div>
 

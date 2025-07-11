@@ -65,16 +65,16 @@ export default function Register() {
   };
 
   return (
-      <div className="min-h-screen flex my-4 items-center justify-center bg-white px-4">
-        <div className="bg-white shadow-xl rounded-xl w-full max-w-md p-8">
-          <h2 className="text-3xl font-bold text-center text-purple-600 mb-6">
+      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900 px-4">
+        <div className="bg-white dark:bg-gray-800 shadow-xl rounded-xl w-full max-w-md p-8 dark:text-gray-100">
+          <h2 className="text-3xl font-bold text-center text-purple-600 dark:text-purple-300 mb-6">
             Create Your Account
           </h2>
 
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Username */}
             <div>
-              <label className="block text-gray-700 font-medium mb-1">Username</label>
+              <label className="block text-gray-700 dark:text-gray-200 font-medium mb-1">Username</label>
               <input
                   type="text"
                   name="username"
@@ -82,13 +82,13 @@ export default function Register() {
                   onChange={handleChange}
                   required
                   placeholder="Enter your name"
-                  className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-purple-400"
+                  className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-purple-400 dark:bg-gray-900 dark:text-gray-100 dark:border-gray-600"
               />
             </div>
 
             {/* Email */}
             <div>
-              <label className="block text-gray-700 font-medium mb-1">Email</label>
+              <label className="block text-gray-700 dark:text-gray-200 font-medium mb-1">Email</label>
               <input
                   type="email"
                   name="email"
@@ -96,13 +96,13 @@ export default function Register() {
                   onChange={handleChange}
                   required
                   placeholder="Enter your email"
-                  className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-purple-400"
+                  className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-purple-400 dark:bg-gray-900 dark:text-gray-100 dark:border-gray-600"
               />
             </div>
 
             {/* Password */}
             <div>
-              <label className="block text-gray-700 font-medium mb-1">Password</label>
+              <label className="block text-gray-700 dark:text-gray-200 font-medium mb-1">Password</label>
               <div className="relative">
                 <input
                     type={showPassword ? 'text' : 'password'}
@@ -111,12 +111,12 @@ export default function Register() {
                     onChange={handleChange}
                     required
                     placeholder="Enter your password"
-                    className="w-full px-4 py-2 border rounded-md pr-10 focus:ring-2 focus:ring-purple-400"
+                    className="w-full px-4 py-2 border rounded-md pr-10 focus:ring-2 focus:ring-purple-400 dark:bg-gray-900 dark:text-gray-100 dark:border-gray-600"
                 />
                 <button
                     type="button"
                     onClick={() => setShowPassword(prev => !prev)}
-                    className="absolute inset-y-0 right-3 flex items-center text-gray-500"
+                    className="absolute inset-y-0 right-3 flex items-center text-gray-500 dark:text-gray-300"
                 >
                   {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>
@@ -125,7 +125,7 @@ export default function Register() {
 
             {/* Address */}
             <div>
-              <label className="block text-gray-700 font-medium mb-1">Address</label>
+              <label className="block text-gray-700 dark:text-gray-200 font-medium mb-1">Address</label>
               <input
                   type="text"
                   name="address"
@@ -133,13 +133,13 @@ export default function Register() {
                   onChange={handleChange}
                   required
                   placeholder="Enter your address"
-                  className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-purple-400"
+                  className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-purple-400 dark:bg-gray-900 dark:text-gray-100 dark:border-gray-600"
               />
             </div>
 
             {/* Phone */}
             <div>
-              <label className="block text-gray-700 font-medium mb-1">Phone Number</label>
+              <label className="block text-gray-700 dark:text-gray-200 font-medium mb-1">Phone Number</label>
               <input
                   type="tel"
                   name="phone"
@@ -147,7 +147,7 @@ export default function Register() {
                   onChange={handleChange}
                   required
                   placeholder="Enter your phone number"
-                  className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-purple-400"
+                  className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-purple-400 dark:bg-gray-900 dark:text-gray-100 dark:border-gray-600"
               />
             </div>
 
@@ -164,9 +164,9 @@ export default function Register() {
           </form>
 
           {/* Login Link */}
-          <p className="mt-6 text-center text-sm text-gray-600">
+          <p className="mt-6 text-center text-sm text-gray-600 dark:text-gray-300">
             Already have an account?{' '}
-            <Link to="/login" className="text-purple-600 hover:underline font-medium">
+            <Link to="/login" className="text-purple-600 dark:text-purple-300 hover:underline font-medium">
               Login here
             </Link>
           </p>
