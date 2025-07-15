@@ -3,6 +3,7 @@ import { useAuth } from "../../context/AuthContext.jsx";
 import { Link } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
 import PageHeader from '../../components/common/PageHeader';
+import UserAvatar from "/images/user-avatar.svg"
 
 export default function Profile() {
   const { user } = useAuth();
@@ -21,7 +22,7 @@ export default function Profile() {
           {/* Profile Image */}
           <div className="rounded-full p-1 bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 shadow-lg">
             <img
-                src={profilePic || "https://via.placeholder.com/150"}
+                src={profilePic || UserAvatar}
                 alt={`${username || "User"} profile`}
                 className="rounded-full w-32 h-32 sm:w-36 sm:h-36 object-cover border-4 border-white dark:border-gray-800"
             />
