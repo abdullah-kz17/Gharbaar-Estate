@@ -118,6 +118,7 @@ const AdminDashboard = () => {
     
     const { 
         users, 
+        total: totalUsers, 
         loading: userLoading 
     } = useSelector((state) => state.adminUsers);
 
@@ -142,19 +143,12 @@ const AdminDashboard = () => {
         fetchDashboardData();
     }, [dispatch]);
 
-    const totalProperties = total || 0;
-    const pendingCount = pendingTotal || 0;
-    const featuredCount = properties?.filter((p) => p.isFeatured).length || 0;
-    const pendingProvidersCount = pendingProvidersTotal || 0;
-    const totalProviders = providers?.length || 0;
-    const totalUsers = users?.length || 0;
-
     // Chart Data
     const barData = {
         labels: ['Properties', 'Pending Props', 'Featured', 'Users', 'Providers', 'Pending Providers'],
         datasets: [{
             label: 'Dashboard Statistics',
-            data: [totalProperties, pendingCount, featuredCount, totalUsers, totalProviders, pendingProvidersCount],
+            data: [total, pendingTotal, properties?.filter((p) => p.isFeatured).length || 0, totalUsers, providers?.length || 0, pendingProvidersTotal],
             backgroundColor: [
                 '#4F46E5', '#F59E0B', '#10B981', '#6366F1', '#14B8A6', '#EC4899'
             ],
@@ -224,7 +218,7 @@ const AdminDashboard = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     <StatCard 
                         title="Total Properties" 
-                        value={totalProperties} 
+                        value={total} 
                         Icon={FaBuilding} 
                         color="linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
                         subtitle="All properties"
@@ -232,7 +226,7 @@ const AdminDashboard = () => {
                     />
                     <StatCard 
                         title="Pending Properties" 
-                        value={pendingCount} 
+                        value={pendingTotal} 
                         Icon={FaClock} 
                         color="linear-gradient(135deg, #f093fb 0%, #f5576c 100%)"
                         subtitle="Awaiting approval"
@@ -240,7 +234,7 @@ const AdminDashboard = () => {
                     />
                     <StatCard 
                         title="Featured" 
-                        value={featuredCount} 
+                        value={properties?.filter((p) => p.isFeatured).length || 0} 
                         Icon={FaStar} 
                         color="linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)"
                         subtitle="Premium listings"
@@ -248,7 +242,7 @@ const AdminDashboard = () => {
                     />
                     <StatCard 
                         title="Pending Providers" 
-                        value={pendingProvidersCount} 
+                        value={pendingProvidersTotal} 
                         Icon={FaUserClock} 
                         color="linear-gradient(135deg, #fa709a 0%, #fee140 100%)"
                         subtitle="Service providers"
@@ -264,7 +258,7 @@ const AdminDashboard = () => {
                     />
                     <StatCard 
                         title="Total Providers" 
-                        value={totalProviders} 
+                        value={providers?.length || 0} 
                         Icon={FaUserTie} 
                         color="linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)"
                         subtitle="Service providers"
