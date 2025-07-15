@@ -158,10 +158,8 @@ const Header = () => {
                     {!isLoggedIn && (
                         <>
                             <MobileLink to="/login" label="Login" icon={<FaSignInAlt />} />
-                            <Link to="/register" className="btn-primary flex items-center justify-center gap-2 w-full dark:text-white">
-                                <FaUserPlus />
-                                Register
-                            </Link>
+                            <MobileLink to="/register"  label ="Register"  icon ={<FaUserPlus />} />
+                     
                         </>
                     )}
                     <div className="pt-2">
