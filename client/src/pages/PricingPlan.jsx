@@ -193,7 +193,7 @@ const PricingPlans = () => {
                                             </span>
                                             {plan.monthly > 0 && (
                                                 <span className="text-gray-600 dark:text-gray-300">
-                                                    /{billingCycle === 'monthly' ? 'mo' : 'yr'}
+                                                    /{billingCycle === 'monthly' ? 'month' : 'year'}
                                                 </span>
                                             )}
                                         </div>
