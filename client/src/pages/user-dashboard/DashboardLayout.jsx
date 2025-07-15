@@ -42,7 +42,11 @@ const DashboardLayout = () => {
                     md:translate-x-0 md:static md:flex-shrink-0
                     z-20
                 `}
-                style={{visibility: sidebarOpen ? 'visible' : 'hidden', pointerEvents: sidebarOpen ? 'auto' : 'none'}}
+                style={
+                  window.innerWidth < 768
+                    ? { visibility: sidebarOpen ? 'visible' : 'hidden', pointerEvents: sidebarOpen ? 'auto' : 'none' }
+                    : {}
+                }
             >
                 <h2 className="text-2xl font-bold text-indigo-600 dark:text-indigo-400 mb-10 tracking-wide select-none">
                     My Dashboard

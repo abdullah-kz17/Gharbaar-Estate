@@ -37,6 +37,12 @@ const UserDashboard = () => {
     const { favorites: favoritePropertiesRaw } = useSelector((state) => state.favorite);
     const { favorites: favoriteServicesRaw } = useSelector((state) => state.favoriteServices);
 
+    // Debug: log userProperties
+    console.log('userProperties:', userProperties);
+
+    // Ensure userProperties is always an array
+    const safeUserProperties = Array.isArray(userProperties) ? userProperties : [];
+
     // Deduplicated + valid favorites
     const favoriteProperties = Array.isArray(favoritePropertiesRaw)
         ? favoritePropertiesRaw.filter((fav, index, self) => {
@@ -56,8 +62,8 @@ const UserDashboard = () => {
         : [];
 
     // Pending/approved counts (fallback to current page if total not available)
-    const pending = userProperties?.filter(p => !p.isApproved).length || 0;
-    const approved = userProperties?.filter(p => p.isApproved).length || 0;
+    const pending = safeUserProperties.filter(p => !p.isApproved).length;
+    const approved = safeUserProperties.filter(p => p.isApproved).length;
 
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
