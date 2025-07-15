@@ -673,8 +673,9 @@ function CostBreakdown({ result }) {
                 {result.breakdown.map((item, idx) => (
                     <li key={idx} className="mb-1">
                         <span className="font-medium">{item.type.charAt(0).toUpperCase() + item.type.slice(1)}</span> ({item.area} sqft, {item.tier}):
-                        Material: Rs. {item.materialCost.toLocaleString()} + Labor: Rs. {item.laborCost.toLocaleString()} = <span className="font-bold">Rs. {(item.materialCost + item.laborCost).toLocaleString()}</span>
+                        Material: Rs {item.materialCost.toLocaleString()} + Labor: Rs. {item.laborCost.toLocaleString()} = <span className="font-bold">Rs. {(item.materialCost + item.laborCost).toLocaleString()}</span>
                     </li>
+                      
                 ))}
             </ul>
             <div className="text-sm text-gray-700">Material Total: Rs. {result.totalMaterial.toLocaleString()}</div>
