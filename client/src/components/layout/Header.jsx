@@ -128,6 +128,7 @@ const Header = () => {
                     <MobileLink to="/" label="Home" icon={<FaHome />} />
                     <MobileLink to="/properties" label="Properties" icon={<FaList />} />
                     <MobileLink to="/services" label="Services" icon={<FaTasks />} />
+                    <MobileLink to="/blogs" label="Blogs" icon={<FaTasks />} />
                     <MobileLink to="/about" label="About Us" icon={<FaUser />} />
                     <MobileLink to="/pricing-plan" label="Pricing Plan" icon={<GiPriceTag />} />
 
