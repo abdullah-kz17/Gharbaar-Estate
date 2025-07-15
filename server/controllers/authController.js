@@ -71,7 +71,7 @@ const register = async (req, res) => {
     user.emailVerificationExpire = Date.now() + 24 * 60 * 60 * 1000;
     await user.save();
 
-    const verificationUrl = `${process.env.FRONTEND_URL}/verify-email?token=${emailToken}&email=${user.email}`;
+    const verificationUrl = `${process.env.FRONTEND_PROD_URL}/verify-email?token=${emailToken}&email=${user.email}`;
     const html = `<h2>Verify Your Email</h2><p>Click below to verify:</p><a href="${verificationUrl}">Verify Email</a>`;
 
     await sendEmail(user.email, "Verify Your Email", html);
@@ -150,7 +150,7 @@ const forgotPassword = async (req, res) => {
     user.resetPasswordExpire = Date.now() + 15 * 60 * 1000;
     await user.save();
 
-    const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
+    const resetUrl = `${process.env.FRONTEND_PROD_URL}/reset-password/${resetToken}`;
     const html = `<p>Reset your password using this link: <a href="${resetUrl}">${resetUrl}</a></p>`;
 
     await sendEmail(user.email, "Password Reset", html);
@@ -278,7 +278,7 @@ const resendVerificationEmail = async (req, res) => {
     user.emailVerificationExpire = Date.now() + 24 * 60 * 60 * 1000;
     await user.save();
 
-    const verificationUrl = `${process.env.FRONTEND_URL}/verify-email?token=${emailToken}&email=${user.email}`;
+    const verificationUrl = `${process.env.FRONTEND_PROD_URL}/verify-email?token=${emailToken}&email=${user.email}`;
     const html = `<h2>Verify Your Email</h2><p>Click the link to verify your email:</p><a href="${verificationUrl}">Verify Email</a>`;
 
     await sendEmail(user.email, "Verify Your Email", html);
