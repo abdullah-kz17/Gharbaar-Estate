@@ -1,5 +1,5 @@
 // src/pages/admin/AdminUserManagement.jsx
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
     getAllUsers,
@@ -14,11 +14,12 @@ import Loader from "../../../components/common/Loader.jsx";
 
 const AdminUserManagement = () => {
     const dispatch = useDispatch();
-    const { users, loading, error, success } = useSelector((state) => state.adminUsers);
+    const { users, loading, error, success, total, page, totalPages } = useSelector((state) => state.adminUsers);
+    const [currentPage, setCurrentPage] = useState(1);
 
     useEffect(() => {
-        dispatch(getAllUsers());
-    }, [dispatch]);
+        dispatch(getAllUsers({ page: currentPage, limit: 10 }));
+    }, [dispatch, currentPage]);
 
     useEffect(() => {
         if (error) toast.error(error);
@@ -84,16 +85,49 @@ const AdminUserManagement = () => {
         </>,
     ]);
 
+    // Pagination component
+    const Pagination = ({ page, totalPages, onPageChange }) => (
+        <div className="flex justify-center mt-6 gap-2">
+            <button
+                onClick={() => onPageChange(page - 1)}
+                disabled={page <= 1}
+                className="px-3 py-1 rounded bg-gray-200 disabled:opacity-50"
+            >
+                Prev
+            </button>
+            {Array.from({ length: totalPages }, (_, i) => (
+                <button
+                    key={i + 1}
+                    onClick={() => onPageChange(i + 1)}
+                    className={`px-3 py-1 rounded ${page === i + 1 ? 'bg-indigo-600 text-white' : 'bg-gray-100'}`}
+                >
+                    {i + 1}
+                </button>
+            ))}
+            <button
+                onClick={() => onPageChange(page + 1)}
+                disabled={page >= totalPages}
+                className="px-3 py-1 rounded bg-gray-200 disabled:opacity-50"
+            >
+                Next
+            </button>
+        </div>
+    );
+
     return (
         <div className="p-6 bg-white rounded-lg shadow-md">
-            <h1 className="text-3xl font-bold mb-6 text-indigo-800">User Management</h1>
+            <h1 className="text-3xl font-bold mb-2 text-indigo-800">User Management</h1>
+            <div className="mb-4 text-gray-600">Total Users: <span className="font-semibold">{total}</span></div>
 
             {loading ? (
                 <div className="text-center py-10">
                     <Loader text="Loading users..." />
                 </div>
             ) : (
-                <PropertyTable headers={headers} rows={rows} />
+                <>
+                    <PropertyTable headers={headers} rows={rows} />
+                    <Pagination page={page} totalPages={totalPages} onPageChange={setCurrentPage} />
+                </>
             )}
         </div>
     );

@@ -6,9 +6,9 @@ import {axiosPrivate} from "../../utils/axiosInstance.js";
 
 export const getAllUsers = createAsyncThunk(
     "adminUsers/getAll",
-    async (_, thunkAPI) => {
+    async ({ page = 1, limit = 10 } = {}, thunkAPI) => {
         try {
-            const res = await axiosPrivate.get("/admin/user");
+            const res = await axiosPrivate.get(`/admin/user?page=${page}&limit=${limit}`);
             return res.data;
         } catch (err) {
             return thunkAPI.rejectWithValue(err.response?.data?.message || "Failed to fetch users");

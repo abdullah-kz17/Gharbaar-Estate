@@ -16,6 +16,9 @@ const adminUserSlice = createSlice({
         loading: false,
         error: null,
         success: null,
+        total: 0,
+        page: 1,
+        totalPages: 1,
     },
     reducers: {
         clearAdminUserMessages: (state) => {
@@ -32,7 +35,10 @@ const adminUserSlice = createSlice({
             })
             .addCase(getAllUsers.fulfilled, (state, action) => {
                 state.loading = false;
-                state.users = action.payload;
+                state.users = action.payload.users || [];
+                state.total = action.payload.total || 0;
+                state.page = action.payload.page || 1;
+                state.totalPages = action.payload.totalPages || 1;
             })
             .addCase(getAllUsers.rejected, (state, action) => {
                 state.loading = false;

@@ -3,8 +3,18 @@ const User = require("../models/userModel.js");
 // @desc Get all users
 exports.getAllUsers = async (req, res) => {
     try {
-        const users = await User.find().select("-password");
-        res.status(200).json(users);
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
+
+        const [users, total] = await Promise.all([
+            User.find().select("-password").skip(skip).limit(limit),
+            User.countDocuments()
+        ]);
+
+        const totalPages = Math.ceil(total / limit);
+
+        res.status(200).json({ users, total, page, totalPages });
     } catch (error) {
         res.status(500).json({ message: "Failed to fetch users" });
     }
