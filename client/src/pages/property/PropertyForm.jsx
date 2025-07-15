@@ -45,6 +45,9 @@ const PropertyForm = () => {
     const [currentRenovationIdx, setCurrentRenovationIdx] = useState(0);
     const [costResult, setCostResult] = useState(null);
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
+
+
     // Helper: Validation
     const validateForm = () => {
         const errors = {};
@@ -161,7 +164,7 @@ const PropertyForm = () => {
                 const aiData = new FormData();
                 aiData.append("image", image);
 
-                const aiRes = await fetch("https://gharbaar-estate.onrender.com/api/ai/analyze-image", {
+                const aiRes = await fetch(`${API_BASE_URL}/ai/analyze-image`, {
                     method: "POST",
                     body: aiData,
                 });
