@@ -20,20 +20,20 @@ import { toast } from 'react-toastify';
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, BarElement);
 
 // -------------------- Stat Card --------------------
-const StatCard = React.memo(({ title, value, Icon: IconComponent, color, subtitle, isLoading }) => (
+const StatCard = React.memo(({ title, value, Icon, color, subtitle, isLoading }) => (
     <div className={`bg-gradient-to-r p-6 rounded-2xl shadow-lg text-white transition-all duration-300 hover:scale-105 cursor-pointer border border-white/20 ${
         isLoading ? 'animate-pulse' : ''
     }`}
          style={{ background: color }}
     >
         <div className="flex justify-between items-center">
-            <div className="flex-1">
-                <h3 className="text-lg font-semibold opacity-90">{title}</h3>
-                <p className="text-4xl font-extrabold mt-1">{isLoading ? '...' : value}</p>
-                {subtitle && <p className="text-sm opacity-80 mt-1">{subtitle}</p>}
+            <div className="flex-1 min-w-0">
+                <h3 className="text-lg font-semibold opacity-90 truncate">{title}</h3>
+                <p className="text-4xl font-extrabold mt-1 truncate">{isLoading ? '...' : value}</p>
+                {subtitle && <p className="text-sm opacity-80 mt-1 truncate">{subtitle}</p>}
             </div>
-            <div className="flex-shrink-0">
-                <IconComponent className="w-12 h-12 opacity-80" />
+            <div className="flex-shrink-0 flex items-center justify-center w-14 h-14 overflow-hidden">
+                <Icon className="w-12 h-12 max-w-full max-h-full opacity-80" style={{display:'block'}} />
             </div>
         </div>
     </div>

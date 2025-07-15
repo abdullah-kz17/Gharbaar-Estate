@@ -22,7 +22,7 @@ const DashboardLayout = () => {
     };
 
     return (
-        <div className="min-h-screen flex flex-col md:flex-row bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-900 dark:to-purple-900 transition-colors duration-500">
+        <div className="min-h-screen flex flex-col md:flex-row bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-900 dark:to-purple-900 transition-colors duration-500 relative">
             {/* Mobile: Sidebar toggle button */}
             <button
                 className="md:hidden m-4 p-2 rounded-md bg-indigo-700 text-white fixed z-30 shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-300"
@@ -37,17 +37,16 @@ const DashboardLayout = () => {
             <aside
                 className={`
                     fixed top-0 left-0 h-full w-64 min-h-screen bg-white dark:bg-gray-900 border-r border-gray-300 dark:border-gray-700
-                    shadow-2xl p-6 flex flex-col relative
-                    transition-transform duration-300 ease-in-out
+                    shadow-2xl p-6 flex flex-col transition-transform duration-300 ease-in-out
                     ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
                     md:translate-x-0 md:static md:flex-shrink-0
                     z-20
                 `}
+                style={{visibility: sidebarOpen ? 'visible' : 'hidden', pointerEvents: sidebarOpen ? 'auto' : 'none'}}
             >
                 <h2 className="text-2xl font-bold text-indigo-600 dark:text-indigo-400 mb-10 tracking-wide select-none">
                     My Dashboard
                 </h2>
-
                 <nav className="flex flex-col gap-3 text-gray-700 dark:text-gray-300 flex-grow overflow-y-auto">
                     {navItems.map(({ to, label, icon, end }) => (
                         <NavLink
@@ -72,8 +71,6 @@ const DashboardLayout = () => {
                         </NavLink>
                     ))}
                 </nav>
-
-                {/* Logout Button fixed at bottom */}
                 <button
                     onClick={handleLogout}
                     className="absolute bottom-6 left-6 right-6 bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-90
