@@ -26,14 +26,14 @@ const StatCard = React.memo(({ title, value, Icon, color, subtitle, isLoading })
     }`}
          style={{ background: color }}
     >
-        <div className="flex justify-between items-center">
-            <div className="flex-1 min-w-0">
+        <div className="flex flex-col sm:flex-row items-center sm:items-center justify-between gap-4 sm:gap-0">
+            <div className="flex-shrink-0 flex items-center justify-center w-16 h-16 mb-2 sm:mb-0">
+                {Icon && <Icon className="w-12 h-12 max-w-full max-h-full opacity-80" style={{display:'block'}} />}
+            </div>
+            <div className="flex-1 min-w-0 text-center sm:text-left">
                 <h3 className="text-lg font-semibold opacity-90 truncate">{title}</h3>
                 <p className="text-4xl font-extrabold mt-1 truncate">{isLoading ? '...' : value}</p>
                 {subtitle && <p className="text-sm opacity-80 mt-1 truncate">{subtitle}</p>}
-            </div>
-            <div className="flex-shrink-0 flex items-center justify-center w-14 h-14 overflow-hidden">
-                <Icon className="w-12 h-12 max-w-full max-h-full opacity-80" style={{display:'block'}} />
             </div>
         </div>
     </div>
@@ -221,7 +221,7 @@ const AdminDashboard = () => {
                 </div>
 
                 {/* Stat Cards */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     <StatCard 
                         title="Total Properties" 
                         value={totalProperties} 
