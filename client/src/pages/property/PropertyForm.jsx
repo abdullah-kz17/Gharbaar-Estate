@@ -161,7 +161,7 @@ const PropertyForm = () => {
                 const aiData = new FormData();
                 aiData.append("image", image);
 
-                const aiRes = await fetch("https://gharbaar-estate.onrender.com/api/analyze-image", {
+                const aiRes = await fetch("https://gharbaar-estate.onrender.com/api/ai/analyze-image", {
                     method: "POST",
                     body: aiData,
                 });
