@@ -50,7 +50,7 @@ export default function Footer() {
             </div>
             <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-400 items-center">
               <span className="flex items-center gap-1"><FaEnvelope className="text-indigo-400" /><a href="mailto:info@gharbaar.com">info@gharbaarestate.com</a></span>
-              <span className="flex items-center gap-1"><FaPhone className="text-indigo-400" /><a href="tel:+923460219660">+92 346-0219660</a></span>
+              <span className="flex items-center gap-1"><FaPhone className="text-indigo-400 rtl:rotate-180" style={{direction: 'ltr'}} /><a href="tel:+923460219660">+92 346-0219660</a></span>
               <span className="flex items-center gap-1"><FaMapMarkerAlt className="text-indigo-400" /><span>123 Estate Avenue, Real City</span></span>
             </div>
           </div>

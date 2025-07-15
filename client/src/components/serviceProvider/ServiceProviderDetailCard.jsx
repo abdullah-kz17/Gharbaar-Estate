@@ -195,7 +195,7 @@ const ServiceProviderDetailCard = ({ provider }) => {
                                         href={`tel:${user.phone}`}
                                         className="flex items-center justify-center gap-3 p-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/25 hover:-translate-y-1 group"
                                     >
-                                        <FaPhone className="group-hover:scale-110 transition-transform duration-300" />
+                                        <FaPhone className="group-hover:scale-110 transition-transform duration-300 rtl:rotate-180" style={{direction: 'ltr'}} />
                                         <div className="text-left">
                                             <div className="font-semibold">Call Now</div>
                                             <div className="text-xs opacity-90">{user.phone}</div>
