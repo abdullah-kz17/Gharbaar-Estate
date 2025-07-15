@@ -125,31 +125,32 @@ const Header = () => {
             {/* Mobile Menu */}
             {isMobileMenuOpen && (
                 <div className="md:hidden bg-white dark:bg-gray-900 px-6 py-4 shadow-md border-t border-gray-100 dark:border-gray-800 space-y-4">
-                    <MobileLink to="/" label="Home" icon={<FaHome />} />
-                    <MobileLink to="/properties" label="Properties" icon={<FaList />} />
-                    <MobileLink to="/services" label="Services" icon={<FaTasks />} />
-                    <MobileLink to="/blogs" label="Blogs" icon={<FaTasks />} />
-                    <MobileLink to="/about" label="About Us" icon={<FaUser />} />
-                    <MobileLink to="/pricing-plan" label="Pricing Plan" icon={<GiPriceTag />} />
+                    <MobileLink to="/" label="Home" icon={<FaHome />} closeMenu={() => setIsMobileMenuOpen(false)} />
+                    <MobileLink to="/properties" label="Properties" icon={<FaList />} closeMenu={() => setIsMobileMenuOpen(false)} />
+                    <MobileLink to="/services" label="Services" icon={<FaTasks />} closeMenu={() => setIsMobileMenuOpen(false)} />
+                    <MobileLink to="/blogs" label="Blogs" icon={<FaTasks />} closeMenu={() => setIsMobileMenuOpen(false)} />
+                    <MobileLink to="/about" label="About Us" icon={<FaUser />} closeMenu={() => setIsMobileMenuOpen(false)} />
+                    <MobileLink to="/pricing-plan" label="Pricing Plan" icon={<GiPriceTag />} closeMenu={() => setIsMobileMenuOpen(false)} />
 
                     {isLoggedIn && (
                         <>
-                            <MobileLink to={isAdmin ? "/admin-dashboard" : "/user-dashboard"} label="Dashboard" icon={<FaDashcube />} />
-                            <MobileLink to="/profile" label="My Profile" icon={<FaUser />} />
-                            {isProvider && <MobileLink to="/service-provider/me" label="Service Profile" icon={<FaUserTie />} />}
+                            <MobileLink to={isAdmin ? "/admin-dashboard" : "/user-dashboard"} label="Dashboard" icon={<FaDashcube />} closeMenu={() => setIsMobileMenuOpen(false)} />
+                            <MobileLink to="/profile" label="My Profile" icon={<FaUser />} closeMenu={() => setIsMobileMenuOpen(false)} />
+                            {isProvider && <MobileLink to="/service-provider/me" label="Service Profile" icon={<FaUserTie />} closeMenu={() => setIsMobileMenuOpen(false)} />}
                             {!user?.isServiceProvider && !isAdmin && (
-                                <MobileLink to="/add-service" label="Become a Provider" icon={<FaPlusCircle />} />
+                                <MobileLink to="/add-service" label="Become a Provider" icon={<FaPlusCircle />} closeMenu={() => setIsMobileMenuOpen(false)} />
                             )}
                             {!isAdmin && (
                                 <Link
                                     to="/add-property"
                                     className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-90 text-white w-48 flex items-center gap-2 px-4 py-2 rounded-md transition"
+                                    onClick={() => setIsMobileMenuOpen(false)}
                                 >
                                     <FaPlusCircle />
                                     Add Property
                                 </Link>
                             )}
-                            <button onClick={logout} className="flex items-center gap-3 text-red-600 hover:text-red-700 w-full">
+                            <button onClick={() => { setIsMobileMenuOpen(false); logout(); }} className="flex items-center gap-3 text-red-600 hover:text-red-700 w-full">
                                 <FaSignOutAlt />
                                 Logout
                             </button>
@@ -158,16 +159,14 @@ const Header = () => {
 
                     {!isLoggedIn && (
                         <>
-                            <MobileLink to="/login" label="Login" icon={<FaSignInAlt />} />
-                            <MobileLink to="/register"  label ="Register"  icon ={<FaUserPlus />} />
-                     
+                            <MobileLink to="/login" label="Login" icon={<FaSignInAlt />} closeMenu={() => setIsMobileMenuOpen(false)} />
+                            <MobileLink to="/register"  label ="Register"  icon ={<FaUserPlus />} closeMenu={() => setIsMobileMenuOpen(false)} />
                         </>
                     )}
                     <div className="pt-2">
                         <ThemeToggle />
                     </div>
                     </div>
-                    
             )}
             </header>
         </>
@@ -200,9 +199,10 @@ const DropdownLink = ({ to, label }) => (
 );
 
 // Active-aware mobile link
-const MobileLink = ({ to, label, icon }) => (
+const MobileLink = ({ to, label, icon, closeMenu }) => (
     <NavLink
         to={to}
+        onClick={closeMenu}
         className={({ isActive }) =>
             `flex items-center gap-3 py-2 font-medium w-full ${
                 isActive
