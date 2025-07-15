@@ -38,8 +38,8 @@ const PricingPlans = () => {
             name: 'Smart Buyer',
             description: 'AI-powered features for serious property hunters',
             icon: <Bot className="w-6 h-6" />,
-            monthly: 29,
-            yearly: 299,
+            monthly: 1500,
+            yearly: 15000,
             popular: true,
             features: [
                 'AI-powered natural language search',
@@ -59,8 +59,8 @@ const PricingPlans = () => {
             name: 'Premium Seller',
             description: 'Complete solution for property sellers and agents',
             icon: <Home className="w-6 h-6" />,
-            monthly: 79,
-            yearly: 799,
+            monthly: 4000,
+            yearly: 40000,
             popular: false,
             features: [
                 'Everything in Smart Buyer',
@@ -82,8 +82,8 @@ const PricingPlans = () => {
             name: 'Enterprise Pro',
             description: 'Advanced tools for real estate professionals',
             icon: <Award className="w-6 h-6" />,
-            monthly: 199,
-            yearly: 1999,
+            monthly: 10000,
+            yearly: 100000,
             popular: false,
             features: [
                 'Everything in Premium Seller',
@@ -189,7 +189,7 @@ const PricingPlans = () => {
                                     <div className="mb-6">
                                         <div className="flex items-baseline gap-1">
                                             <span className="text-3xl font-bold text-gray-900 dark:text-white">
-                                                ${getPlanPrice(plan)}
+                                                ₨{getPlanPrice(plan).toLocaleString('en-PK')}
                                             </span>
                                             {plan.monthly > 0 && (
                                                 <span className="text-gray-600 dark:text-gray-300">
