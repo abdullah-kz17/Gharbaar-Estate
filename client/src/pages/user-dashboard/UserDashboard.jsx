@@ -33,7 +33,7 @@ const UserDashboard = () => {
     }, [dispatch]);
 
 
-    const { userProperties, total: userTotal } = useSelector((state) => state.property);
+    const { userProperties, total: userTotal, pendingCount, approvedCount } = useSelector((state) => state.property);
     const { favorites: favoritePropertiesRaw } = useSelector((state) => state.favorite);
     const { favorites: favoriteServicesRaw } = useSelector((state) => state.favoriteServices);
 
@@ -61,9 +61,9 @@ const UserDashboard = () => {
         })
         : [];
 
-    // Pending/approved counts (fallback to current page if total not available)
-    const pending = safeUserProperties.filter(p => !p.isApproved).length;
-    const approved = safeUserProperties.filter(p => p.isApproved).length;
+    // Pending/approved counts (prefer backend counts, fallback to filtering)
+    const pending = typeof pendingCount === 'number' ? pendingCount : safeUserProperties.filter(p => !p.isApproved).length;
+    const approved = typeof approvedCount === 'number' ? approvedCount : safeUserProperties.filter(p => p.isApproved).length;
 
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">

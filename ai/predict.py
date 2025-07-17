@@ -140,14 +140,3 @@ def predict():
             "error": "Internal Server Error",
             "details": str(e)
         }), 500
-
-if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5001))  # Use Render's PORT if set
-    host = os.environ.get("FLASK_HOST", "0.0.0.0")
-    debug = os.environ.get("FLASK_DEBUG", "False").lower() == "true"
-
-    print(f"🚀 Starting Flask AI server on {host}:{port}")
-    print(f"🔧 Debug mode: {debug}")
-    print(f"💻 Device: {device}")
-
-    app.run(host=host, port=port, debug=debug)

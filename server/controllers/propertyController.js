@@ -288,17 +288,21 @@ exports.getUserProperties = async (req, res) => {
         const limit = parseInt(req.query.limit) > 0 ? parseInt(req.query.limit) : 12;
         const skip = (page - 1) * limit;
         const filter = { createdBy: req.user._id };
-        const [properties, total] = await Promise.all([
+        const [properties, total, pendingCount, approvedCount] = await Promise.all([
             Property.find(filter)
                 .sort({ createdAt: -1 })
                 .skip(skip)
                 .limit(limit),
-            Property.countDocuments(filter)
+            Property.countDocuments(filter),
+            Property.countDocuments({ createdBy: req.user._id, isApproved: false }),
+            Property.countDocuments({ createdBy: req.user._id, isApproved: true })
         ]);
         res.status(200).json({
             success: true,
             properties,
             total,
+            pendingCount,
+            approvedCount,
             page,
             totalPages: Math.ceil(total / limit)
         });
