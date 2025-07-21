@@ -16,11 +16,15 @@ router.post('/analyze-image', upload.single('image'), async (req, res) => {
         const form = new FormData();
         form.append('image', fs.createReadStream(filePath));
 
-        const flaskURL = 'https://gharbaar-estate-ai.onrender.com/predict';
+             // For local development:
+     const flaskURL = 'http://127.0.0.1:5001/predict';
+     // Or, if your Flask server runs on a different port, update accordingly.
+
+        // const flaskURL = 'https://gharbaar-estate-ai.onrender.com/predict' || 'http://127.0.0.1:5001/predict' || 'http://localhost:5001/predict';
 
         const response = await axios.post(flaskURL, form, {
             headers: form.getHeaders(),
-        });
+        })
 
         fs.unlinkSync(filePath);
         res.status(200).json(response.data);

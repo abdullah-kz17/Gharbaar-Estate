@@ -6,6 +6,7 @@ import Modal from "react-modal";
 import { createProperty } from "../../store/thunks/PropertyThunk";
 import { DEFECT_TYPES, QUALITY_TIERS, estimateRenovationCost } from "../../utils/renovationEstimator";
 import { useNavigate } from "react-router-dom";
+import 'jspdf-autotable';
 
 Modal.setAppElement("#root");
 
@@ -16,43 +17,45 @@ const PropertyForm = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [formData, setFormData] = useState({
         name: "",
+        propertyType: "House",
         description: "",
         price: "",
         area: "",
         address: "",
-        latitude: "",
-        longitude: "",
-        role: "user",
+        city: "",
+        province: "",
         beds: "",
         baths: "",
         kitchens: "",
-        renovationRequired: false,
-        renovationReason: "",
+        diningRooms: "",
+        furnishedStatus: "Unfurnished",
+        floors: "1",
+        lawnGarden: false,
         phone: "",
         email: "",
-        realtorId: "",
+        renovationRequired: false,
+        renovationReason: "",
     });
 
     const [images, setImages] = useState([]);
     const [imagePreview, setImagePreview] = useState([]);
     const [features, setFeatures] = useState([]);
     const [amenities, setAmenities] = useState([]);
-
     const [modalOpen, setModalOpen] = useState(false);
     const [aiResults, setAiResults] = useState([]);
+    const [renovationAIResults, setRenovationAIResults] = useState([]); // Only 'Needs Renovation' images
     const [renovationInputs, setRenovationInputs] = useState([]);
     const [showRenovationFlow, setShowRenovationFlow] = useState(false);
     const [currentRenovationIdx, setCurrentRenovationIdx] = useState(0);
     const [costResult, setCostResult] = useState(null);
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
-
+    const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
 
     // Helper: Validation
     const validateForm = () => {
         const errors = {};
         const requiredFields = [
-            "name", "description", "price", "area", "address", "latitude", "longitude", "beds", "baths", "kitchens"
+            "name", "propertyType", "description", "price", "area", "address", "city", "province", "beds", "baths", "kitchens"
         ];
         requiredFields.forEach(field => {
             if (!formData[field] || (typeof formData[field] === 'string' && !formData[field].trim())) {
@@ -60,12 +63,12 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api'
             }
         });
         if (formData.price && isNaN(Number(formData.price))) errors.price = "Must be a number";
-        if (formData.latitude && isNaN(Number(formData.latitude))) errors.latitude = "Must be a number";
-        if (formData.longitude && isNaN(Number(formData.longitude))) errors.longitude = "Must be a number";
         if (formData.beds && isNaN(Number(formData.beds))) errors.beds = "Must be a number";
         if (formData.baths && isNaN(Number(formData.baths))) errors.baths = "Must be a number";
         if (formData.kitchens && isNaN(Number(formData.kitchens))) errors.kitchens = "Must be a number";
-        if (formData.email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(formData.email)) errors.email = "Invalid email";
+        if (formData.diningRooms && isNaN(Number(formData.diningRooms))) errors.diningRooms = "Must be a number";
+        if (formData.floors && isNaN(Number(formData.floors))) errors.floors = "Must be a number";
+        if (formData.email && formData.email.trim() && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(formData.email)) errors.email = "Invalid email";
         if (images.length === 0) errors.images = "At least one image required";
         return errors;
     };
@@ -103,27 +106,16 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api'
             });
             return;
         }
-        console.log("📤 Submitting property...");
-
+        // Prepare data
         const data = new FormData();
         data.append("name", formData.name);
+        data.append("propertyType", formData.propertyType);
         data.append("description", formData.description);
         data.append("price", formData.price);
         data.append("area", formData.area);
-        data.append(
-            "location",
-            JSON.stringify({
-                address: formData.address,
-                coordinates: {
-                    type: "Point",
-                    coordinates: [
-                        parseFloat(formData.longitude),
-                        parseFloat(formData.latitude),
-                    ],
-                },
-            })
-        );
-        data.append("role", formData.role);
+        data.append("address", formData.address);
+        data.append("city", formData.city);
+        data.append("province", formData.province);
         data.append("features", JSON.stringify(features));
         data.append("amenities", JSON.stringify(amenities));
         data.append(
@@ -132,8 +124,12 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api'
                 beds: parseInt(formData.beds),
                 baths: parseInt(formData.baths),
                 kitchens: parseInt(formData.kitchens),
+                diningRooms: formData.diningRooms ? parseInt(formData.diningRooms) : 0,
             })
         );
+        data.append("furnishedStatus", formData.furnishedStatus);
+        data.append("floors", formData.floors);
+        data.append("lawnGarden", formData.lawnGarden);
         data.append("renovationRequired", formData.renovationRequired);
         data.append("renovationReason", formData.renovationReason);
         data.append(
@@ -143,79 +139,74 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api'
                 email: formData.email,
             })
         );
-        if (formData.realtorId) data.append("realtorId", formData.realtorId);
         images.forEach((img) => data.append("images", img));
-
-        // ✅ Debugging logs
-        console.log("🧾 FormData content:");
-        for (let pair of data.entries()) {
-            console.log(`${pair[0]}:`, pair[1]);
-        }
 
         setIsSubmitting(true);
         try {
-            // ✅ Submit to backend
-            const res = await dispatch(createProperty({ formData: data })).unwrap();
+            await dispatch(createProperty({ formData: data })).unwrap();
             toast.success("Property created successfully!");
-
-            // ✅ Run AI prediction for each image
+            // --- AI Image Analysis & Renovation Flow ---
             const results = [];
             for (let image of images) {
                 const aiData = new FormData();
                 aiData.append("image", image);
-
                 const aiRes = await fetch(`${API_BASE_URL}/ai/analyze-image`, {
                     method: "POST",
                     body: aiData,
                 });
-
                 if (!aiRes.ok) throw new Error("AI prediction failed");
-
                 const result = await aiRes.json();
                 results.push({
                     prediction: result.prediction,
-                    highlightUrl: result.highlight_url, // ✅ Already contains full URL
+                    highlightUrl: result.highlight_url,
                 });
             }
-
             setAiResults(results);
-            setModalOpen(true); // ✅ Show AI modal instantly
-            if (results.some(r => r.prediction === "Needs Renovation")) {
+            setModalOpen(true);
+            const needsRenovationImages = results.filter(r => r.prediction === "Needs Renovation");
+            if (needsRenovationImages.length > 0) {
                 setShowRenovationFlow(true);
-                setCurrentRenovationIdx(0);
                 setRenovationInputs([]);
+                setRenovationAIResults(needsRenovationImages);
+                setCurrentRenovationIdx(0);
             }
-
-            // ✅ Reset form
-            setFormData({
-                name: "",
-                description: "",
-                price: "",
-                area: "",
-                address: "",
-                latitude: "",
-                longitude: "",
-                role: "user",
-                beds: "",
-                baths: "",
-                kitchens: "",
-                renovationRequired: false,
-                renovationReason: "",
-                phone: "",
-                email: "",
-                realtorId: "",
-            });
-            setFeatures([]);
-            setAmenities([]);
-            setImages([]);
-            setImagePreview([]);
+            // ... reset formData, features, amenities, images, imagePreview ...
         } catch (error) {
             console.error("❌ Submission error:", error);
             toast.error("Submission failed: " + (error?.message || "Unknown error"));
-        }
-        finally {
+        } finally {
             setIsSubmitting(false);
         }
+    };
+
+    const handleCloseModal = () => {
+        setModalOpen(false);
+        setFormData({
+            name: "",
+            propertyType: "House",
+            description: "",
+            price: "",
+            area: "",
+            address: "",
+            city: "",
+            province: "",
+            beds: "",
+            baths: "",
+            kitchens: "",
+            diningRooms: "",
+            furnishedStatus: "Unfurnished",
+            floors: "1",
+            lawnGarden: false,
+            phone: "",
+            email: "",
+            renovationRequired: false,
+            renovationReason: "",
+        });
+        setFeatures([]);
+        setAmenities([]);
+        setImages([]);
+        setImagePreview([]);
+        setFormErrors({});
     };
 
     return (
@@ -226,23 +217,26 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api'
                 <section className="bg-white dark:bg-gray-900 rounded-xl p-6 mb-4 shadow-sm border border-gray-100 dark:border-gray-800">
                     <h3 className="text-xl font-bold mb-4 text-indigo-700 dark:text-indigo-300">Basic Information</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <Input name="name" value={formData.name} onChange={handleChange} label={<><FaRulerCombined className="inline mr-2 text-indigo-400" />Property Name *</>} error={formErrors.name} />
-                        <Input name="price" value={formData.price} type="number" onChange={handleChange} label={<><FaDollarSign className="inline mr-2 text-green-400" />Price (PKR) *</>} error={formErrors.price} />
-                        <Input name="area" value={formData.area} onChange={handleChange} label={<><FaRulerCombined className="inline mr-2 text-blue-400" />Area *</>} error={formErrors.area} />
-                        <Input name="address" value={formData.address} onChange={handleChange} label={<><FaMapMarkerAlt className="inline mr-2 text-red-400" />Address *</>} error={formErrors.address} />
-                        <Input name="latitude" value={formData.latitude} onChange={handleChange} label="Latitude *" error={formErrors.latitude} />
-                        <Input name="longitude" value={formData.longitude} onChange={handleChange} label="Longitude *" error={formErrors.longitude} />
-                        <Select name="role" value={formData.role} onChange={handleChange} label="Role">
-                            <option value="user">User</option>
-                            <option value="realtor">Realtor</option>
+                        <Input name="name" value={formData.name} onChange={handleChange} label="Property Name *" error={formErrors.name} />
+                        <Select name="propertyType" value={formData.propertyType} onChange={handleChange} label="Property Type *">
+                            <option value="House">House</option>
+                            <option value="Apartment">Apartment</option>
+                            <option value="Plot">Plot</option>
+                            <option value="Commercial">Commercial</option>
+                            <option value="Other">Other</option>
                         </Select>
-                        <Input name="realtorId" value={formData.realtorId} onChange={handleChange} label="Realtor ID (optional)" />
+                        <Input name="price" value={formData.price} type="number" onChange={handleChange} label="Price (PKR) *" error={formErrors.price} />
+                        <Input name="area" value={formData.area} onChange={handleChange} label="Area *" error={formErrors.area} />
                     </div>
                 </section>
-                {/* Description */}
+                {/* Address */}
                 <section className="bg-white dark:bg-gray-900 rounded-xl p-6 mb-4 shadow-sm border border-gray-100 dark:border-gray-800">
-                    <h3 className="text-xl font-bold mb-4 text-indigo-700 dark:text-indigo-300">Description</h3>
-                    <TextArea name="description" value={formData.description} onChange={handleChange} label="Description *" error={formErrors.description} />
+                    <h3 className="text-xl font-bold mb-4 text-indigo-700 dark:text-indigo-300">Address</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <Input name="address" value={formData.address} onChange={handleChange} label="Full Address *" error={formErrors.address} />
+                        <Input name="city" value={formData.city} onChange={handleChange} label="City *" error={formErrors.city} />
+                        <Input name="province" value={formData.province} onChange={handleChange} label="Province/State *" error={formErrors.province} />
+                    </div>
                 </section>
                 {/* Features & Amenities */}
                 <section className="bg-white dark:bg-gray-900 rounded-xl p-6 mb-4 shadow-sm border border-gray-100 dark:border-gray-800">
@@ -255,10 +249,27 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api'
                 {/* Rooms */}
                 <section className="bg-white dark:bg-gray-900 rounded-xl p-6 mb-4 shadow-sm border border-gray-100 dark:border-gray-800">
                     <h3 className="text-xl font-bold mb-4 text-indigo-700 dark:text-indigo-300">Rooms</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                        <Input name="beds" type="number" value={formData.beds} onChange={handleChange} label="Beds *" error={formErrors.beds} />
+                        <Input name="baths" type="number" value={formData.baths} onChange={handleChange} label="Baths *" error={formErrors.baths} />
+                        <Input name="kitchens" type="number" value={formData.kitchens} onChange={handleChange} label="Kitchens *" error={formErrors.kitchens} />
+                        <Input name="diningRooms" type="number" value={formData.diningRooms} onChange={handleChange} label="Dining Rooms" error={formErrors.diningRooms} />
+                    </div>
+                </section>
+                {/* Furnishing & Floors */}
+                <section className="bg-white dark:bg-gray-900 rounded-xl p-6 mb-4 shadow-sm border border-gray-100 dark:border-gray-800">
+                    <h3 className="text-xl font-bold mb-4 text-indigo-700 dark:text-indigo-300">Furnishing & Other Details</h3>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <Input name="beds" type="number" value={formData.beds} onChange={handleChange} label={<><FaBed className="inline mr-2 text-purple-400" />Beds *</>} error={formErrors.beds} />
-                        <Input name="baths" type="number" value={formData.baths} onChange={handleChange} label={<><FaBath className="inline mr-2 text-pink-400" />Baths *</>} error={formErrors.baths} />
-                        <Input name="kitchens" type="number" value={formData.kitchens} onChange={handleChange} label={<><FaUtensils className="inline mr-2 text-yellow-400" />Kitchens *</>} error={formErrors.kitchens} />
+                        <Select name="furnishedStatus" value={formData.furnishedStatus} onChange={handleChange} label="Furnished Status">
+                            <option value="Furnished">Furnished</option>
+                            <option value="Semi-furnished">Semi-furnished</option>
+                            <option value="Unfurnished">Unfurnished</option>
+                        </Select>
+                        <Input name="floors" type="number" value={formData.floors} onChange={handleChange} label="Floors" error={formErrors.floors} />
+                        <div className="flex items-center gap-2 mt-6">
+                            <input type="checkbox" name="lawnGarden" checked={formData.lawnGarden} onChange={handleChange} id="lawnGarden" />
+                            <label htmlFor="lawnGarden" className="font-medium">Lawn/Garden</label>
+                        </div>
                     </div>
                 </section>
                 {/* Renovation */}
@@ -276,9 +287,14 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api'
                 <section className="bg-white dark:bg-gray-900 rounded-xl p-6 mb-4 shadow-sm border border-gray-100 dark:border-gray-800">
                     <h3 className="text-xl font-bold mb-4 text-indigo-700 dark:text-indigo-300">Contact Information</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <Input name="phone" value={formData.phone} onChange={handleChange} label={<><FaPhone className="inline mr-2 text-green-400" />Phone</>} />
-                        <Input name="email" type="email" value={formData.email} onChange={handleChange} label={<><FaEnvelope className="inline mr-2 text-blue-400" />Email</>} error={formErrors.email} />
+                        <Input name="phone" value={formData.phone} onChange={handleChange} label="Phone" />
+                        <Input name="email" type="email" value={formData.email} onChange={handleChange} label="Email" error={formErrors.email} />
                     </div>
+                </section>
+                {/* Description */}
+                <section className="bg-white dark:bg-gray-900 rounded-xl p-6 mb-4 shadow-sm border border-gray-100 dark:border-gray-800">
+                    <h3 className="text-xl font-bold mb-4 text-indigo-700 dark:text-indigo-300">Description</h3>
+                    <TextArea name="description" value={formData.description} onChange={handleChange} label="Description *" error={formErrors.description} />
                 </section>
                 {/* Image Upload */}
                 <section className="bg-white dark:bg-gray-900 rounded-xl p-6 mb-4 shadow-sm border border-gray-100 dark:border-gray-800">
@@ -336,7 +352,7 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api'
             {/* AI Modal */}
             <Modal
                 isOpen={modalOpen}
-                onRequestClose={() => setModalOpen(false)}
+                onRequestClose={handleCloseModal}
                 contentLabel="AI Image Analysis"
                 className="w-full max-w-4xl max-h-[90vh] overflow-y-auto  mx-auto my-16 p-6 bg-white rounded-lg shadow-xl"
                 overlayClassName="fixed inset-0 z-50 bg-black bg-opacity-40 flex items-center justify-center"
@@ -361,7 +377,7 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api'
                 {/* Renovation Cost Estimation Flow */}
                 {showRenovationFlow && (
                     <RenovationStepper
-                        aiResults={aiResults}
+                        aiResults={renovationAIResults}
                         currentIdx={currentRenovationIdx}
                         setCurrentIdx={setCurrentRenovationIdx}
                         renovationInputs={renovationInputs}
@@ -388,7 +404,7 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api'
                             </button>
                             <button
                                 className="px-6 py-3 bg-gray-300 text-gray-800 rounded-lg text-lg font-semibold shadow hover:bg-gray-400 transition"
-                                onClick={() => setModalOpen(false)}
+                                onClick={handleCloseModal}
                             >
                                 Close
                             </button>
@@ -398,7 +414,7 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api'
 
                 <div className="text-right mt-6">
                     <button
-                        onClick={() => setModalOpen(false)}
+                        onClick={handleCloseModal}
                         className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
                     >
                         Close
@@ -692,3 +708,4 @@ function CostBreakdown({ result }) {
 }
 
 export default PropertyForm;
+       

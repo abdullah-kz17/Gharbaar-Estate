@@ -26,7 +26,7 @@ const Property = require('./models/propertyModel');
 
 const app = express();
 
-const allowedOrigins = (process.env.FRONTEND_URLS || '').split(',');
+const allowedOrigins = (process.env.FRONTEND_URLS || 'http://localhost:5173').split(',');
 
 app.use(cors({
   origin: function (origin, callback) {
@@ -59,7 +59,7 @@ app.use("/api/ai", aiRoutes);
 app.use((err, req, res, next) => {
   if (err instanceof multer.MulterError) {
     return res.status(400).json({ success: false, message: err.message });
-  } else if (err.message === 'Invalid file type. Only JPG, JPEG, and PNG are allowed.') {
+  } else if (err.message === 'Invalid file type. Only JPG, JPEG, WEBP and PNG are allowed.') {
     return res.status(400).json({ success: false, message: err.message });
   }
   next(err);

@@ -9,7 +9,7 @@ import {
     FaWhatsapp,
     FaHeart,
     FaShare,
-    FaEye, FaPhone
+    FaEye, FaPhone, FaUtensils
 } from "react-icons/fa";
 
 const PropertyDetailCard = ({ property }) => {
@@ -18,7 +18,6 @@ const PropertyDetailCard = ({ property }) => {
         description,
         price,
         area,
-        location,
         rooms,
         features,
         amenities,
@@ -64,36 +63,35 @@ const PropertyDetailCard = ({ property }) => {
                     </div>
                 )}
 
-                {/* Image Gallery */}
+                {/* Modern Image Gallery */}
                 <div className="relative">
-                    <div className="relative overflow-hidden">
+                    <div className="relative overflow-hidden flex justify-center items-center bg-gray-100" style={{ minHeight: '350px' }}>
                         <img
                             src={mainImage}
                             alt="Main"
-                            className="w-full h-80 sm:h-96 object-fill transition-transform duration-700 hover:scale-105"
+                            className="object-contain max-h-[450px] w-auto max-w-full transition-transform duration-700 hover:scale-105 rounded-xl shadow-lg"
                             onError={handleImageError}
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent pointer-events-none"></div>
                     </div>
-
                     {normalizedImages.length > 1 && (
-                        <div className="flex gap-3 p-4 overflow-x-auto bg-gradient-to-r from-gray-50 to-gray-100">
+                        <div className="flex gap-3 p-4 overflow-x-auto bg-gradient-to-r from-gray-50 to-gray-100 justify-center">
                             {normalizedImages.map((img, idx) => (
                                 <div
                                     key={idx}
                                     className={`relative flex-shrink-0 cursor-pointer transition-all duration-300 hover:scale-105 ${
-                                        mainImage === img ? 'ring-3 ring-purple-500 shadow-lg shadow-purple-500/25' : ''
+                                        mainImage === img ? 'ring-4 ring-indigo-400 shadow-lg' : ''
                                     }`}
                                     onClick={() => setMainImage(img)}
                                 >
                                     <img
                                         src={img}
                                         alt={`Thumb-${idx}`}
-                                        className="h-20 w-28 object-cover rounded-xl"
+                                        className="h-20 w-auto max-w-[120px] object-contain rounded-xl border border-gray-200"
                                         onError={handleImageError}
                                     />
                                     {mainImage === img && (
-                                        <div className="absolute inset-0 bg-purple-500/20 rounded-xl"></div>
+                                        <div className="absolute inset-0 bg-indigo-400/10 rounded-xl"></div>
                                     )}
                                 </div>
                             ))}
@@ -111,7 +109,13 @@ const PropertyDetailCard = ({ property }) => {
                             </h1>
                             <div className="flex items-center gap-2 text-gray-600">
                                 <FaMapMarkerAlt className="text-red-500" />
-                                <span>{location?.address}</span>
+                                <span>{property.address}, {property.city}, {property.province}</span>
+                            </div>
+                            <div className="flex flex-wrap gap-2 mt-2">
+                                <span className="px-2 py-1 bg-indigo-100 text-indigo-700 rounded text-xs font-semibold">{property.propertyType}</span>
+                                <span className="px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-semibold">{property.furnishedStatus}</span>
+                                <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-semibold">Floors: {property.floors}</span>
+                                {property.lawnGarden && <span className="px-2 py-1 bg-emerald-100 text-emerald-700 rounded text-xs font-semibold">Lawn/Garden</span>}
                             </div>
                         </div>
                         <div className="text-right">
@@ -141,26 +145,73 @@ const PropertyDetailCard = ({ property }) => {
 
                     {/* Property Stats */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        {[
-                            { icon: FaRulerCombined, label: 'Area', value: area, color: 'blue' },
-                            { icon: FaBed, label: 'Bedrooms', value: `${rooms?.beds} Beds`, color: 'purple' },
-                            { icon: FaBath, label: 'Bathrooms', value: `${rooms?.baths} Baths`, color: 'pink' },
-                            { icon: FaMapMarkerAlt, label: 'Location', value: location?.address || 'N/A', color: 'green' }
-                        ].map((stat, idx) => (
-                            <div key={idx} className="group">
-                                <div className={`p-4 rounded-xl bg-gradient-to-br from-${stat.color}-50 to-${stat.color}-100 border border-${stat.color}-200 hover:shadow-lg hover:shadow-${stat.color}-500/10 transition-all duration-300 hover:-translate-y-1`}>
+                        <div className="group">
+                            <div className="p-4 rounded-xl bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-300 hover:-translate-y-1">
+                                <div className="flex items-center gap-3">
+                                    <div className="p-2 rounded-lg bg-gradient-to-r from-blue-500 to-blue-600 text-white group-hover:scale-110 transition-transform duration-300">
+                                        <FaRulerCombined className="w-4 h-4" />
+                                    </div>
+                                    <div>
+                                        <div className="text-sm text-gray-500">Area</div>
+                                        <div className="font-semibold text-gray-800">{area}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="group">
+                            <div className="p-4 rounded-xl bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200 hover:shadow-lg hover:shadow-purple-500/10 transition-all duration-300 hover:-translate-y-1">
+                                <div className="flex items-center gap-3">
+                                    <div className="p-2 rounded-lg bg-gradient-to-r from-purple-500 to-purple-600 text-white group-hover:scale-110 transition-transform duration-300">
+                                        <FaBed className="w-4 h-4" />
+                                    </div>
+                                    <div>
+                                        <div className="text-sm text-gray-500">Bedrooms</div>
+                                        <div className="font-semibold text-gray-800">{rooms?.beds} Beds</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="group">
+                            <div className="p-4 rounded-xl bg-gradient-to-br from-pink-50 to-pink-100 border border-pink-200 hover:shadow-lg hover:shadow-pink-500/10 transition-all duration-300 hover:-translate-y-1">
+                                <div className="flex items-center gap-3">
+                                    <div className="p-2 rounded-lg bg-gradient-to-r from-pink-500 to-pink-600 text-white group-hover:scale-110 transition-transform duration-300">
+                                        <FaBath className="w-4 h-4" />
+                                    </div>
+                                    <div>
+                                        <div className="text-sm text-gray-500">Bathrooms</div>
+                                        <div className="font-semibold text-gray-800">{rooms?.baths} Baths</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="group">
+                            <div className="p-4 rounded-xl bg-gradient-to-br from-yellow-50 to-yellow-100 border border-yellow-200 hover:shadow-lg hover:shadow-yellow-500/10 transition-all duration-300 hover:-translate-y-1">
+                                <div className="flex items-center gap-3">
+                                    <div className="p-2 rounded-lg bg-gradient-to-r from-yellow-500 to-yellow-600 text-white group-hover:scale-110 transition-transform duration-300">
+                                        <FaUtensils className="w-4 h-4" />
+                                    </div>
+                                    <div>
+                                        <div className="text-sm text-gray-500">Kitchens</div>
+                                        <div className="font-semibold text-gray-800">{rooms?.kitchens} Kitchens</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {rooms?.diningRooms > 0 && (
+                            <div className="group">
+                                <div className="p-4 rounded-xl bg-gradient-to-br from-pink-50 to-pink-100 border border-pink-200 hover:shadow-lg hover:shadow-pink-500/10 transition-all duration-300 hover:-translate-y-1">
                                     <div className="flex items-center gap-3">
-                                        <div className={`p-2 rounded-lg bg-gradient-to-r from-${stat.color}-500 to-${stat.color}-600 text-white group-hover:scale-110 transition-transform duration-300`}>
-                                            <stat.icon className="w-4 h-4" />
+                                        <div className="p-2 rounded-lg bg-gradient-to-r from-pink-500 to-pink-600 text-white group-hover:scale-110 transition-transform duration-300">
+                                            <FaUtensils className="w-4 h-4" />
                                         </div>
                                         <div>
-                                            <div className="text-sm text-gray-500">{stat.label}</div>
-                                            <div className="font-semibold text-gray-800">{stat.value}</div>
+                                            <div className="text-sm text-gray-500">Dining Rooms</div>
+                                            <div className="font-semibold text-gray-800">{rooms?.diningRooms}</div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        ))}
+                        )}
                     </div>
 
                     {/* Features and Amenities */}

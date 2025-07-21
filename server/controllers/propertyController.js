@@ -40,38 +40,30 @@ function parsePrice(text) {
 exports.createProperty = async (req, res) => {
     try {
         const {
-            name, description, price, area, location, role,
-            features, amenities, rooms, renovationRequired,
-            renovationReason, contactInfo, realtorId
+            name, propertyType, description, price, area, address, city, province,
+            features, amenities, rooms, furnishedStatus, floors, lawnGarden,
+            renovationRequired, renovationReason, contactInfo
         } = req.body;
 
         const userId = req.user?._id;
 
-        if (!name || !description || !price || !area || !location || !rooms) {
+        // Validate required fields
+        if (!name || !propertyType || !description || !price || !area || !address || !city || !province || !rooms) {
             return res.status(400).json({ success: false, message: 'Missing required fields.' });
         }
 
-        let parsedLocation, parsedRooms, parsedFeatures, parsedAmenities, parsedContactInfo;
+        let parsedRooms, parsedFeatures, parsedAmenities, parsedContactInfo;
         try {
-            parsedLocation = JSON.parse(location);
-            parsedRooms = JSON.parse(rooms);
-            parsedFeatures = features ? JSON.parse(features) : [];
-            parsedAmenities = amenities ? JSON.parse(amenities) : [];
-            parsedContactInfo = contactInfo ? JSON.parse(contactInfo) : {};
+            parsedRooms = typeof rooms === 'string' ? JSON.parse(rooms) : rooms;
+            parsedFeatures = features ? (typeof features === 'string' ? JSON.parse(features) : features) : [];
+            parsedAmenities = amenities ? (typeof amenities === 'string' ? JSON.parse(amenities) : amenities) : [];
+            parsedContactInfo = contactInfo ? (typeof contactInfo === 'string' ? JSON.parse(contactInfo) : contactInfo) : {};
         } catch (err) {
             return res.status(400).json({
                 success: false,
                 message: 'Invalid JSON structure in one of the fields.',
                 error: err.message,
             });
-        }
-
-        if (
-            !parsedLocation.address ||
-            !parsedLocation.coordinates ||
-            !Array.isArray(parsedLocation.coordinates.coordinates)
-        ) {
-            return res.status(400).json({ success: false, message: 'Invalid or incomplete location data.' });
         }
 
         const images = req.files?.map((file) => file.path) || [];
@@ -81,33 +73,33 @@ exports.createProperty = async (req, res) => {
 
         const newProperty = new Property({
             name,
+            propertyType,
             description,
             price,
             area,
-            location: parsedLocation,
-            role,
+            address,
+            city,
+            province,
             features: parsedFeatures,
             amenities: parsedAmenities,
             rooms: parsedRooms,
+            furnishedStatus,
+            floors,
+            lawnGarden,
             images,
             renovationRequired,
             renovationReason,
             contactInfo: parsedContactInfo,
-            realtorId,
             createdBy: userId,
             status: 'pending',
             isApproved: false
         });
 
         const saved = await newProperty.save();
-        const populated = await Property.findById(saved._id)
-            .populate('realtorId', 'username email phone role')
-            .populate('createdBy', 'username email role');
-
         res.status(201).json({
             success: true,
             message: 'Property created and sent for admin approval.',
-            property: populated,
+            property: saved,
         });
     } catch (err) {
         console.error('Property creation error:', err);
@@ -133,7 +125,6 @@ exports.getAllProperties = async (req, res) => {
                 .sort({ isFeatured: -1, createdAt: -1 })
                 .skip(skip)
                 .limit(limit)
-                .populate('realtorId', 'username email phone role')
                 .populate('createdBy', 'username email role'),
             Property.countDocuments(filter)
         ]);
@@ -164,7 +155,6 @@ exports.getPropertyById = async (req, res) => {
         }
 
         const property = await Property.findById(id)
-            .populate('realtorId', 'username email phone role')
             .populate('createdBy', 'username email role');
 
         if (!property) {
@@ -202,38 +192,26 @@ exports.updateProperty = async (req, res) => {
 
         const updates = req.body;
 
-        // Safely parse JSON fields
-        if (updates.location) updates.location = safeParse(updates.location);
-        if (updates.rooms) updates.rooms = safeParse(updates.rooms);
-        if (updates.features) updates.features = safeParse(updates.features);
-        if (updates.amenities) updates.amenities = safeParse(updates.amenities);
-        if (updates.contactInfo) updates.contactInfo = safeParse(updates.contactInfo);
-
-        // Optional: Validate location format if needed
-        if (
-            updates.location &&
-            (!updates.location.address ||
-                !updates.location.coordinates ||
-                !Array.isArray(updates.location.coordinates.coordinates))
-        ) {
-            return res.status(400).json({ success: false, message: 'Invalid or incomplete location data.' });
-        }
-
-        if ('createdBy' in updates) {
-            delete updates.createdBy;
-        }
+        // Parse JSON fields if needed
+        if (updates.rooms) updates.rooms = typeof updates.rooms === 'string' ? JSON.parse(updates.rooms) : updates.rooms;
+        if (updates.features) updates.features = typeof updates.features === 'string' ? JSON.parse(updates.features) : updates.features;
+        if (updates.amenities) updates.amenities = typeof updates.amenities === 'string' ? JSON.parse(updates.amenities) : updates.amenities;
+        if (updates.contactInfo) updates.contactInfo = typeof updates.contactInfo === 'string' ? JSON.parse(updates.contactInfo) : updates.contactInfo;
 
         // Handle uploaded images
         if (req.files && req.files.length > 0) {
             updates.images = req.files.map(file => file.path);
         }
 
+        // Remove fields that should not be updated directly
+        if ('createdBy' in updates) delete updates.createdBy;
+        if ('status' in updates) delete updates.status;
+        if ('isApproved' in updates) delete updates.isApproved;
+
         const updatedProperty = await Property.findByIdAndUpdate(id, updates, {
             new: true,
             runValidators: true,
-        })
-            .populate('realtorId', 'username email phone role')
-            .populate('createdBy', 'username email role');
+        });
 
         res.status(200).json({
             success: true,
@@ -369,7 +347,6 @@ exports.getPendingProperties = async (req, res) => {
         const filter = { status: 'pending', isApproved: false };
         const [properties, total] = await Promise.all([
             Property.find(filter)
-                .populate('realtorId', 'username email phone role')
                 .populate('createdBy', 'username email role')
                 .sort({ createdAt: -1 })
                 .skip(skip)
@@ -515,7 +492,6 @@ exports.searchPropertiesByPrompt = async (req, res) => {
 
         // --- Step 5: Search in DB ---
         const properties = await Property.find(query)
-            .populate('realtorId', 'username email phone role')
             .populate('createdBy', 'username email role');
 
         res.status(200).json({
