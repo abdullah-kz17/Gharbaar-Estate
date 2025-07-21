@@ -26,7 +26,7 @@ const Property = require('./models/propertyModel');
 
 const app = express();
 
-const allowedOrigins = (process.env.FRONTEND_URLS || 'http://localhost:5173').split(',');
+const allowedOrigins = process.env.FRONTEND_URLS || 'http://localhost:5173'
 
 app.use(cors({
   origin: function (origin, callback) {
