@@ -16,8 +16,9 @@ router.post('/analyze-image', upload.single('image'), async (req, res) => {
         const form = new FormData();
         form.append('image', fs.createReadStream(filePath));
 
-             // For local development:
-     const flaskURL = 'https://gharbaar-estate-ai-service.onrender.com/predict';
+        // For local development:
+        
+        const flaskURL = process.env.AI_SERVICE_URL;
      // Or, if your Flask server runs on a different port, update accordingly.
 
         // const flaskURL = 'https://gharbaar-estate-ai.onrender.com/predict' || 'http://127.0.0.1:5001/predict' || 'http://localhost:5001/predict';
