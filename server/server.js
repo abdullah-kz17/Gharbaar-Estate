@@ -26,7 +26,11 @@ const Property = require('./models/propertyModel');
 
 const app = express();
 
-const allowedOrigins = process.env.DEVELOPMENT_PORT || process.env.PRODUCTION_PORT
+const allowedOrigins = [
+  process.env.DEVELOPMENT_PORT,
+  process.env.PRODUCTION_PORT,
+];
+
 
 app.use(cors({
   origin: function (origin, callback) {
