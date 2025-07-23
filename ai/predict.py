@@ -33,7 +33,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 try:
     model = models.resnet50(pretrained=False)
     model.fc = nn.Linear(model.fc.in_features, 2)
-    model.load_state_dict(torch.load("renovation_model.pt", map_location=device))
+    model.load_state_dict(torch.load("renovation_best_model.pt", map_location=device))
     model.to(device).eval()
     print("✅ Model loaded successfully on", device)
 except Exception as e:

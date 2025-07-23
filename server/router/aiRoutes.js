@@ -18,8 +18,8 @@ router.post('/analyze-image', upload.single('image'), async (req, res) => {
 
         // For local development:
         
-        const flaskURL = process.env.AI_SERVICE_URL;
-     // Or, if your Flask server runs on a different port, update accordingly.
+        const flaskURL = 'http://127.0.0.1:5000/predict';
+        // Or, if your Flask server runs on a different port, update accordingly.
 
         // const flaskURL = 'https://gharbaar-estate-ai.onrender.com/predict' || 'http://127.0.0.1:5001/predict' || 'http://localhost:5001/predict';
 

@@ -513,109 +513,130 @@ const TagInput = ({ label, tags, setTags, placeholder }) => {
 };
 
 // Renovation Stepper Component
-function RenovationStepper({ aiResults, currentIdx, setCurrentIdx, renovationInputs, setRenovationInputs, setShowRenovationFlow, setCostResult }) {
-    const [form, setForm] = useState({ area: '', types: [], tiers: {}, notes: '' });
+function RenovationStepper({
+    aiResults,
+    currentIdx,
+    setCurrentIdx,
+    renovationInputs,
+    setRenovationInputs,
+    setShowRenovationFlow,
+    setCostResult
+}) {
+    const [form, setForm] = useState({
+        types: [],
+        areas: {},
+        tiers: {},
+        notes: ''
+    });
     const [step, setStep] = useState(0);
     const [error, setError] = useState('');
     const totalSteps = 4;
+
     const needsRenovationImages = aiResults.filter(r => r.prediction === "Needs Renovation");
     const currentImageIdx = needsRenovationImages.findIndex(r => aiResults.indexOf(r) === currentIdx);
     const currentImage = aiResults.find((r, idx) => idx === currentIdx && r.prediction === "Needs Renovation");
 
+    // Reset step and form when image changes
     useEffect(() => {
         if (!currentImage) {
             if (currentIdx < aiResults.length - 1) setCurrentIdx(currentIdx + 1);
             else finish();
+            return;
         }
+
+        // Reset form and step
+        setForm({
+            types: [],
+            areas: {},
+            tiers: {},
+            notes: ''
+        });
+        setStep(0);
+        setError('');
         // eslint-disable-next-line
     }, [currentImage]);
 
     function handleNext() {
-        if (step === 0 && (!form.area || isNaN(form.area) || form.area <= 0)) {
-            setError('Please enter a valid area.');
-            return;
-        }
-        if (step === 1 && form.types.length === 0) {
+        if (step === 0 && form.types.length === 0) {
             setError('Please select at least one defect type.');
             return;
         }
+        if (step === 1 && form.types.some(type => !form.areas[type] || isNaN(form.areas[type]) || form.areas[type] <= 0)) {
+            setError('Please enter valid area for all selected defect types.');
+            return;
+        }
         if (step === 2 && form.types.some(type => !form.tiers[type])) {
-            setError('Please select quality for all defect types.');
+            setError('Please select quality tier for all selected defect types.');
             return;
         }
         setError('');
         setStep(step + 1);
     }
+
     function handlePrev() {
         setStep(step - 1);
     }
+
     function handleSkip() {
-        // Skip this image, go to next
         if (currentIdx < aiResults.length - 1) setCurrentIdx(currentIdx + 1);
         else {
             setShowRenovationFlow(false);
             setCostResult(null);
         }
     }
+
     function finish() {
-        setRenovationInputs([...renovationInputs, {
-            area: Number(form.area),
+        const newInput = {
             types: form.types,
+            areas: form.areas,
             tiers: form.tiers,
             notes: form.notes,
-            imageIdx: currentIdx,
-        }]);
-        if (currentIdx < aiResults.length - 1) setCurrentIdx(currentIdx + 1);
-        else {
+            imageIdx: currentIdx
+        };
+        const updatedInputs = [...renovationInputs, newInput];
+
+        setRenovationInputs(updatedInputs);
+
+        if (currentIdx < aiResults.length - 1) {
+            setCurrentIdx(currentIdx + 1);
+        } else {
             setShowRenovationFlow(false);
-            const allDefects = [...renovationInputs, {
-                area: Number(form.area),
-                types: form.types,
-                tiers: form.tiers,
-                notes: form.notes,
-                imageIdx: currentIdx,
-            }].flatMap(input => input.types.map(type => ({
-                area: input.area,
-                type,
-                tier: input.tiers[type],
-                notes: input.notes,
-            })));
-            setCostResult(estimateRenovationCost(allDefects, { includeServiceFee: true, includeTax: true }));
+            const allDefects = updatedInputs.flatMap(input =>
+                input.types.map(type => ({
+                    area: Number(input.areas[type]),
+                    type,
+                    tier: input.tiers[type],
+                    notes: input.notes
+                }))
+            );
+            setCostResult(estimateRenovationCost(allDefects, {
+                includeServiceFee: true,
+                includeTax: true
+            }));
         }
     }
+
     if (!currentImage) return null;
+
     return (
         <div className="mt-8 p-6 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl shadow-xl transition-all duration-300">
-            {/* Stepper Progress Bar */}
+            {/* Progress Bar */}
             <div className="flex items-center mb-6">
                 {[...Array(totalSteps)].map((_, idx) => (
                     <div key={idx} className={`flex-1 h-2 mx-1 rounded-full ${idx <= step ? 'bg-indigo-500' : 'bg-gray-200'}`}></div>
                 ))}
             </div>
+
             <div className="flex items-center justify-between mb-4">
                 <span className="text-sm text-gray-600 font-medium">Image {currentImageIdx + 1} of {needsRenovationImages.length}</span>
                 <span className="text-sm text-gray-600 font-medium">Step {step + 1} of {totalSteps}</span>
             </div>
+
             <div className="flex flex-col md:flex-row gap-6 items-start">
                 <img src={currentImage.highlightUrl} alt="Defect Highlight" className="w-56 h-40 object-cover rounded-lg border-2 border-indigo-200 shadow" />
                 <div className="flex-1">
+                    {/* Step 0: Select Types */}
                     {step === 0 && (
-                        <div className="mb-4 animate-fade-in">
-                            <label className="block font-semibold mb-2 text-indigo-700 flex items-center gap-2">
-                                Estimated Area of Defect (sqft)
-                                <span className="text-xs text-gray-400" title="Approximate area affected by the defect">ⓘ</span>
-                            </label>
-                            <input
-                                type="number"
-                                min="1"
-                                value={form.area}
-                                onChange={e => setForm({ ...form, area: e.target.value })}
-                                className="border-2 border-indigo-300 px-4 py-2 rounded-lg w-40 text-lg focus:ring-2 focus:ring-indigo-400"
-                                placeholder="e.g. 50"
-                            />
-                        </div>
-                    )}
-                    {step === 1 && (
                         <div className="mb-4 animate-fade-in">
                             <label className="block font-semibold mb-2 text-indigo-700">Defect Types <span className="text-xs text-gray-400">(select all that apply)</span></label>
                             <div className="flex flex-wrap gap-3">
@@ -625,8 +646,16 @@ function RenovationStepper({ aiResults, currentIdx, setCurrentIdx, renovationInp
                                         type="button"
                                         className={`px-4 py-2 rounded-lg border-2 font-medium shadow-sm transition-all duration-200 flex items-center gap-2 ${form.types.includes(type) ? 'bg-indigo-100 border-indigo-500 text-indigo-700' : 'bg-white border-gray-300 text-gray-700 hover:bg-indigo-50'}`}
                                         onClick={() => {
-                                            if (form.types.includes(type)) setForm({ ...form, types: form.types.filter(t => t !== type) });
-                                            else setForm({ ...form, types: [...form.types, type] });
+                                            const updatedTypes = form.types.includes(type)
+                                                ? form.types.filter(t => t !== type)
+                                                : [...form.types, type];
+                                            const updatedAreas = { ...form.areas };
+                                            const updatedTiers = { ...form.tiers };
+                                            if (!updatedTypes.includes(type)) {
+                                                delete updatedAreas[type];
+                                                delete updatedTiers[type];
+                                            }
+                                            setForm({ ...form, types: updatedTypes, areas: updatedAreas, tiers: updatedTiers });
                                         }}
                                     >
                                         <span className="capitalize">{type}</span>
@@ -635,29 +664,59 @@ function RenovationStepper({ aiResults, currentIdx, setCurrentIdx, renovationInp
                             </div>
                         </div>
                     )}
-                    {step === 2 && (
+
+                    {/* Step 1: Input area per type */}
+                    {step === 1 && (
                         <div className="mb-4 animate-fade-in">
-                            <label className="block font-semibold mb-2 text-indigo-700">Select Quality for Each Type</label>
-                            <div className="space-y-3">
+                            <label className="block font-semibold mb-2 text-indigo-700">Estimated Area per Defect (sqft)</label>
+                            <div className="space-y-4">
                                 {form.types.map(type => (
                                     <div key={type} className="flex items-center gap-3">
-                                        <span className="w-28 font-semibold capitalize text-gray-700">{type}</span>
+                                        <span className="w-28 font-medium capitalize text-gray-700">{type}</span>
+                                        <input
+                                            type="number"
+                                            min="1"
+                                            value={form.areas[type] || ''}
+                                            onChange={e =>
+                                                setForm({
+                                                    ...form,
+                                                    areas: { ...form.areas, [type]: e.target.value }
+                                                })
+                                            }
+                                            className="border-2 border-indigo-300 px-3 py-2 rounded-lg w-32 focus:ring-2 focus:ring-indigo-400"
+                                            placeholder="e.g. 50"
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Step 2: Select tier per type */}
+                    {step === 2 && (
+                        <div className="mb-4 animate-fade-in">
+                            <label className="block font-semibold mb-2 text-indigo-700">Select Quality Tier</label>
+                            <div className="space-y-4">
+                                {form.types.map(type => (
+                                    <div key={type} className="flex items-center gap-3">
+                                        <span className="w-28 font-medium capitalize text-gray-700">{type}</span>
                                         <select
                                             value={form.tiers[type] || ''}
                                             onChange={e => setForm({ ...form, tiers: { ...form.tiers, [type]: e.target.value } })}
-                                            className="border-2 border-indigo-300 px-3 py-2 rounded-lg text-base focus:ring-2 focus:ring-indigo-400"
+                                            className="border-2 border-indigo-300 px-3 py-2 rounded-lg w-40 focus:ring-2 focus:ring-indigo-400"
                                         >
                                             <option value="">Select Quality</option>
                                             {QUALITY_TIERS.map(q => (
                                                 <option key={q.value} value={q.value}>{q.label}</option>
                                             ))}
                                         </select>
-                                        <span className="text-xs text-gray-400" title="Higher tier means better quality and higher cost">ⓘ</span>
                                     </div>
                                 ))}
                             </div>
                         </div>
                     )}
+
+                    {/* Step 3: Additional Notes */}
                     {step === 3 && (
                         <div className="mb-4 animate-fade-in">
                             <label className="block font-semibold mb-2 text-indigo-700">Additional Notes <span className="text-xs text-gray-400">(optional)</span></label>
@@ -670,12 +729,40 @@ function RenovationStepper({ aiResults, currentIdx, setCurrentIdx, renovationInp
                             />
                         </div>
                     )}
+
                     {error && <div className="text-red-600 mt-2 font-medium animate-shake">{error}</div>}
+
+                    {/* Buttons */}
                     <div className="mt-6 flex flex-wrap gap-3">
-                        {step > 0 && <button className="px-5 py-2 bg-gray-300 rounded-lg font-semibold text-gray-700 hover:bg-gray-400 transition" onClick={handlePrev}>Back</button>}
-                        <button className="px-5 py-2 bg-gray-200 rounded-lg font-semibold text-gray-700 hover:bg-gray-300 transition" onClick={handleSkip}>Skip</button>
-                        {step < totalSteps - 1 && <button className="px-5 py-2 bg-indigo-600 text-white rounded-lg font-semibold shadow hover:bg-indigo-700 transition" onClick={handleNext}>Next</button>}
-                        {step === totalSteps - 1 && <button className="px-5 py-2 bg-green-600 text-white rounded-lg font-semibold shadow hover:bg-green-700 transition" onClick={finish}>Finish</button>}
+                        {step > 0 && (
+                            <button
+                                className="px-5 py-2 bg-gray-300 rounded-lg font-semibold text-gray-700 hover:bg-gray-400 transition"
+                                onClick={handlePrev}
+                            >
+                                Back
+                            </button>
+                        )}
+                        <button
+                            className="px-5 py-2 bg-gray-200 rounded-lg font-semibold text-gray-700 hover:bg-gray-300 transition"
+                            onClick={handleSkip}
+                        >
+                            Skip
+                        </button>
+                        {step < totalSteps - 1 ? (
+                            <button
+                                className="px-5 py-2 bg-indigo-600 text-white rounded-lg font-semibold shadow hover:bg-indigo-700 transition"
+                                onClick={handleNext}
+                            >
+                                Next
+                            </button>
+                        ) : (
+                            <button
+                                className="px-5 py-2 bg-green-600 text-white rounded-lg font-semibold shadow hover:bg-green-700 transition"
+                                onClick={finish}
+                            >
+                                Finish
+                            </button>
+                        )}
                     </div>
                 </div>
             </div>
