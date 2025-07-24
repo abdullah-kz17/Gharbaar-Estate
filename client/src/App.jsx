@@ -58,12 +58,16 @@ import "./App.css";
 import ServiceProviderRequests from "./pages/serviceProvider/ServiceProviderRequests.jsx";
 import MyRequests from "./pages/user-dashboard/dashboard-controls/MyRequestedServices.jsx";
 import ScrollToTop from './components/common/ScrollToTop.jsx';
+import ChatbotWidget from "./components/common/ChatbotWidget.jsx";
+import CustomCursor from "./components/common/CustomCursor.jsx";
 
 function App() {
   return (
     <Router>
+      <CustomCursor />
       <ScrollToTop />
       <Header />
+      <ChatbotWidget />
 
       <Suspense fallback={<Loader />}>
         <Routes>

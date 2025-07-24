@@ -20,9 +20,9 @@ const userRoute = require("./router/userRoutes.js")
 const requestRoute = require("./router/serviceRequestRoutes.js")
 const blogRoute = require("./router/blogRoutes.js")
 const aiRoutes = require("./router/aiRoutes.js")
+const chatbotRoutes = require("./router/chatbotRoutes.js");
 
 const Property = require('./models/propertyModel');
-
 
 const app = express();
 
@@ -57,7 +57,7 @@ app.use("/api/admin/user", userRoute)
 app.use("/api/request", requestRoute)
 app.use("/api/blog", blogRoute)
 app.use("/api/ai", aiRoutes);
-
+app.use('/api', chatbotRoutes);
 
 // catch multer errors
 app.use((err, req, res, next) => {
@@ -107,7 +107,6 @@ app.post("/api/contact", async (req, res) => {
     res.status(500).json({ error: "Failed to send email." });
   }
 });
-
 
 const port = process.env.PORT || 5000;
 

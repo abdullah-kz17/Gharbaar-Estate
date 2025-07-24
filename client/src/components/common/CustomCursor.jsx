@@ -1,58 +1,84 @@
-import React, { useEffect } from "react";
-import "./CustomCursor.css"; // CSS file created in the next step
+import React, { useEffect, useRef } from 'react';
 
 const CustomCursor = () => {
-    useEffect(() => {
-        const coords = { x: 0, y: 0 };
-        const circles = document.querySelectorAll(".circle");
+  const dotRef = useRef(null);
+  const ringRef = useRef(null);
+  const isTouch = useRef(false);
 
-        const colors = [
-            "#4f46e5", "#5a3fea", "#6548ec", "#7051ef", "#7b5af2",
-            "#8663f4", "#916cf6", "#9c75f9", "#a77efb", "#b287fe",
-            "#bc90ff", "#c699ff", "#d0a2ff", "#dbabff", "#e5b4ff",
-            "#efbdff", "#f9c6ff", "#fbc2ff", "#f9b6ff", "#f2a6ff"
-        ];
+  useEffect(() => {
+    const dot = dotRef.current;
+    const ring = ringRef.current;
+    if (!dot || !ring) return;
 
-        circles.forEach((circle, index) => {
-            circle.x = 0;
-            circle.y = 0;
-            circle.style.backgroundColor = colors[index % colors.length];
-        });
+    let mouseX = 0, mouseY = 0;
+    let ringX = 0, ringY = 0;
+    let animationFrame;
 
-        window.addEventListener("mousemove", (e) => {
-            coords.x = e.clientX;
-            coords.y = e.clientY;
-        });
+    const updateCursor = (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      dot.style.transform = `translate3d(${mouseX - 6}px, ${mouseY - 6}px, 0)`;
+    };
 
-        function animateCircles() {
-            let x = coords.x;
-            let y = coords.y;
+    const animateRing = () => {
+      ringX += (mouseX - ringX) * 0.18;
+      ringY += (mouseY - ringY) * 0.18;
+      ring.style.transform = `translate3d(${ringX - 18}px, ${ringY - 18}px, 0)`;
+      animationFrame = requestAnimationFrame(animateRing);
+    };
 
-            circles.forEach((circle, index) => {
-                circle.style.left = x - 12 + "px";
-                circle.style.top = y - 12 + "px";
-                circle.style.scale = (circles.length - index) / circles.length;
-                circle.x = x;
-                circle.y = y;
+    const handleClick = () => {
+      dot.classList.add('scale-125');
+      ring.classList.add('scale-110');
+      setTimeout(() => {
+        dot.classList.remove('scale-125');
+        ring.classList.remove('scale-110');
+      }, 150);
+    };
 
-                const nextCircle = circles[index + 1] || circles[0];
-                x += (nextCircle.x - x) * 0.3;
-                y += (nextCircle.y - y) * 0.3;
-            });
+    const handleTouch = () => {
+      isTouch.current = true;
+      dot.style.display = 'none';
+      ring.style.display = 'none';
+    };
 
-            requestAnimationFrame(animateCircles);
-        }
+    document.addEventListener('mousemove', updateCursor);
+    document.addEventListener('mousedown', handleClick);
+    document.addEventListener('touchstart', handleTouch, { once: true });
+    animationFrame = requestAnimationFrame(animateRing);
 
-        animateCircles();
-    }, []);
+    return () => {
+      document.removeEventListener('mousemove', updateCursor);
+      document.removeEventListener('mousedown', handleClick);
+      document.removeEventListener('touchstart', handleTouch);
+      cancelAnimationFrame(animationFrame);
+    };
+  }, []);
 
-    return (
-        <>
-            {Array.from({ length: 20 }).map((_, i) => (
-                <div key={i} className="circle" />
-            ))}
-        </>
-    );
+  // Hide on mobile/touch
+  useEffect(() => {
+    if ('ontouchstart' in window || window.innerWidth < 768) {
+      if (dotRef.current) dotRef.current.style.display = 'none';
+      if (ringRef.current) ringRef.current.style.display = 'none';
+    }
+  }, []);
+
+  return (
+    <>
+      {/* Center dot */}
+      <div
+        ref={dotRef}
+        className="pointer-events-none fixed z-[9999] w-3 h-3 rounded-full bg-indigo-600 dark:bg-indigo-300 transition-transform duration-150 ease-out"
+        style={{ left: 0, top: 0 }}
+      />
+      {/* Outer ring */}
+      <div
+        ref={ringRef}
+        className="pointer-events-none fixed z-[9998] w-9 h-9 rounded-full border-2 border-indigo-400 dark:border-indigo-200 bg-indigo-400/10 dark:bg-indigo-200/10 shadow-lg shadow-indigo-400/20 dark:shadow-indigo-900/30 transition-transform duration-200 ease-out"
+        style={{ left: 0, top: 0 }}
+      />
+    </>
+  );
 };
 
 export default CustomCursor;
