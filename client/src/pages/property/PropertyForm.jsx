@@ -7,6 +7,7 @@ import { createProperty } from "../../store/thunks/PropertyThunk";
 import { DEFECT_TYPES, QUALITY_TIERS, estimateRenovationCost } from "../../utils/renovationEstimator";
 import { useNavigate } from "react-router-dom";
 import 'jspdf-autotable';
+import { FaTools, FaMoneyBillWave, FaTruck, FaReceipt, FaPercent, FaCalculator } from "react-icons/fa";
 
 Modal.setAppElement("#root");
 
@@ -389,21 +390,25 @@ const PropertyForm = () => {
 
                 {/* Cost Result & Booking Option */}
                 {costResult && (
-                    <div className="mt-8">
-                        <h4 className="text-lg font-bold mb-2">Estimated Renovation Cost</h4>
+                    <div className="mt-10">
+                        <div className="flex items-center gap-3 mb-4">
+                            <FaCalculator className="text-indigo-600 text-2xl" />
+                            <h4 className="text-2xl font-extrabold text-indigo-800 dark:text-indigo-200 tracking-tight">Estimated Renovation Cost</h4>
+                        </div>
                         <CostBreakdown result={costResult} />
-                        <div className="mt-4 flex flex-col sm:flex-row gap-4">
+                        <div className="border-t border-indigo-200 dark:border-gray-700 my-8"></div>
+                        <div className="flex flex-col sm:flex-row gap-4 justify-end">
                             <button
-                                className="px-6 py-3 bg-green-600 text-white rounded-lg text-lg font-semibold shadow hover:bg-green-700 transition"
+                                className="px-6 py-3 bg-gradient-to-r from-green-500 to-green-700 text-white rounded-xl text-lg font-bold shadow-lg hover:from-green-600 hover:to-green-800 transition flex items-center gap-2"
                                 onClick={() => {
                                     toast.success("Redirecting to verified professionals...");
                                     setTimeout(() => navigate("/services"), 800);
                                 }}
                             >
-                                Book Verified Professional
+                                <FaTools /> Book Verified Professional
                             </button>
                             <button
-                                className="px-6 py-3 bg-gray-300 text-gray-800 rounded-lg text-lg font-semibold shadow hover:bg-gray-400 transition"
+                                className="px-6 py-3 bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-xl text-lg font-semibold shadow hover:bg-gray-300 dark:hover:bg-gray-700 transition"
                                 onClick={handleCloseModal}
                             >
                                 Close
@@ -773,23 +778,63 @@ function RenovationStepper({
 // Cost Breakdown Component
 function CostBreakdown({ result }) {
     return (
-        <div className="bg-white rounded shadow p-4">
-            <h5 className="font-semibold mb-2">Breakdown</h5>
-            <ul className="mb-2">
+        <div className="bg-gradient-to-br from-indigo-50 to-purple-100 dark:from-gray-900 dark:to-gray-800 rounded-2xl shadow-2xl p-6 border border-indigo-100 dark:border-gray-700 animate-fade-in">
+            <div className="flex items-center gap-3 mb-4">
+                <FaCalculator className="text-indigo-600 text-2xl" />
+                <h3 className="text-2xl font-extrabold text-indigo-800 dark:text-indigo-200 tracking-tight">Renovation Cost Report</h3>
+            </div>
+            {/* Summary Section */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                <div className="bg-white dark:bg-gray-900 rounded-xl p-4 shadow flex items-center gap-3 border border-indigo-100 dark:border-gray-800">
+                    <FaMoneyBillWave className="text-green-500 text-xl" />
+                    <div>
+                        <div className="text-xs text-gray-500">Total Cost</div>
+                        <div className="text-2xl font-bold text-green-700 dark:text-green-300">Rs. {result.total.toLocaleString()}</div>
+                    </div>
+                </div>
+                <div className="bg-white dark:bg-gray-900 rounded-xl p-4 shadow flex items-center gap-3 border border-indigo-100 dark:border-gray-800">
+                    <FaReceipt className="text-indigo-500 text-xl" />
+                    <div>
+                        <div className="text-xs text-gray-500">Material + Labor</div>
+                        <div className="text-lg font-semibold text-indigo-700 dark:text-indigo-300">Rs. {(result.totalMaterial + result.totalLabor).toLocaleString()}</div>
+                    </div>
+                </div>
+            </div>
+            {/* Breakdown List */}
+            <h5 className="font-semibold mb-2 text-indigo-700 dark:text-indigo-300 flex items-center gap-2"><FaTools className="text-indigo-400" /> Detailed Breakdown</h5>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 {result.breakdown.map((item, idx) => (
-                    <li key={idx} className="mb-1">
-                        <span className="font-medium">{item.type.charAt(0).toUpperCase() + item.type.slice(1)}</span> ({item.area} sqft, {item.tier}):
-                        Material: Rs {item.materialCost.toLocaleString()} + Labor: Rs. {item.laborCost.toLocaleString()} = <span className="font-bold">Rs. {(item.materialCost + item.laborCost).toLocaleString()}</span>
-                    </li>
-                      
+                    <div key={idx} className="bg-white dark:bg-gray-900 rounded-lg p-4 shadow border border-indigo-100 dark:border-gray-800 flex flex-col gap-2 animate-fade-in">
+                        <div className="flex items-center gap-2 mb-1">
+                            <span className="font-bold text-indigo-700 dark:text-indigo-300 text-lg capitalize">{item.type}</span>
+                            <span className="text-xs bg-indigo-100 dark:bg-indigo-800 text-indigo-600 dark:text-indigo-200 px-2 py-0.5 rounded-full ml-2">{item.tier}</span>
+                        </div>
+                        <div className="text-sm text-gray-600 dark:text-gray-300">Area: <span className="font-semibold">{item.area} sqft</span></div>
+                        <div className="flex items-center gap-2 text-sm">
+                            <span className="flex items-center gap-1 text-blue-700 dark:text-blue-300"><FaMoneyBillWave /> Material: <span className="font-semibold">Rs {item.materialCost.toLocaleString()}</span></span>
+                            <span className="mx-2 text-gray-400">+</span>
+                            <span className="flex items-center gap-1 text-yellow-700 dark:text-yellow-300"><FaTools /> Labor: <span className="font-semibold">Rs {item.laborCost.toLocaleString()}</span></span>
+                        </div>
+                        <div className="text-right text-base font-bold text-indigo-800 dark:text-indigo-200 mt-2">Total: Rs. {(item.materialCost + item.laborCost).toLocaleString()}</div>
+                    </div>
                 ))}
-            </ul>
-            <div className="text-sm text-gray-700">Material Total: Rs. {result.totalMaterial.toLocaleString()}</div>
-            <div className="text-sm text-gray-700">Labor Total: Rs. {result.totalLabor.toLocaleString()}</div>
-            <div className="text-sm text-gray-700">Petrol/Transport: Rs. {result.petrolCost.toLocaleString()}</div>
-            {result.serviceFee > 0 && <div className="text-sm text-gray-700">Service Fee: Rs. {result.serviceFee.toLocaleString()}</div>}
-            {result.tax > 0 && <div className="text-sm text-gray-700">Tax (5%): Rs. {result.tax.toLocaleString()}</div>}
-            <div className="font-bold mt-2 text-lg">Total: Rs. {result.total.toLocaleString()}</div>
+            </div>
+            {/* Totals Section */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-2">
+                <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300"><FaMoneyBillWave className="text-green-500" /> Material Total: <span className="font-semibold">Rs. {result.totalMaterial.toLocaleString()}</span></div>
+                <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300"><FaTools className="text-yellow-500" /> Labor Total: <span className="font-semibold">Rs. {result.totalLabor.toLocaleString()}</span></div>
+                <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300"><FaTruck className="text-pink-500" /> Petrol/Transport: <span className="font-semibold">Rs. {result.petrolCost.toLocaleString()}</span></div>
+                {result.serviceFee > 0 && <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300"><FaReceipt className="text-indigo-500" /> Service Fee: <span className="font-semibold">Rs. {result.serviceFee.toLocaleString()}</span></div>}
+                {result.tax > 0 && <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300"><FaPercent className="text-purple-500" /> Tax (5%): <span className="font-semibold">Rs. {result.tax.toLocaleString()}</span></div>}
+            </div>
+            <div className="mt-6 flex justify-end gap-4">
+                <button
+                    className="px-5 py-2 bg-indigo-600 text-white rounded-lg font-semibold shadow hover:bg-indigo-700 transition flex items-center gap-2"
+                    onClick={() => window.print()}
+                >
+                    <FaReceipt /> Download/Print Report
+                </button>
+            </div>
         </div>
     );
 }
