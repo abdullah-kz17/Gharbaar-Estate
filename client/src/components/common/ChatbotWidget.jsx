@@ -89,7 +89,7 @@ const ChatbotWidget = () => {
       {!open && (
         <button
           onClick={() => setOpen(true)}
-          className="fixed bottom-6 right-6 bg-indigo-600 dark:bg-indigo-700 text-white rounded-full w-16 h-16 shadow-lg z-50 flex items-center justify-center text-3xl hover:bg-indigo-700 dark:hover:bg-indigo-800 transition-colors"
+          className="fixed bottom-24 right-8 bg-indigo-600 dark:bg-indigo-700 text-white rounded-full w-16 h-16 shadow-lg z-50 flex items-center justify-center text-3xl hover:bg-indigo-700 dark:hover:bg-indigo-800 transition-colors"
           aria-label="Open chatbot"
         >
           <FaComments style={{ width: 36, height: 36 }} />
